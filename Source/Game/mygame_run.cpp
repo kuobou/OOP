@@ -10,7 +10,7 @@
 using namespace game_framework;
 
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
+// é€™å€‹classç‚ºéŠæˆ²çš„éŠæˆ²åŸ·è¡Œç‰©ä»¶ï¼Œä¸»è¦çš„éŠæˆ²ç¨‹å¼éƒ½åœ¨é€™è£¡
 /////////////////////////////////////////////////////////////////////////////
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
@@ -25,13 +25,13 @@ void CGameStateRun::OnBeginState()
 {
 }
 
-void CGameStateRun::OnMove()							// ²¾°Ê¹CÀ¸¤¸¯À
+void CGameStateRun::OnMove()							// ç§»å‹•éŠæˆ²å…ƒç´ 
 {
 	
 }
 
-void CGameStateRun::OnInit()  								// ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
-{	
+void CGameStateRun::OnInit()  								// éŠæˆ²çš„åˆå€¼åŠåœ–å½¢è¨­å®š
+{
 	char stage_map[16][28] = { {'A', 'A', 'A', 'A', 'A', 'A', 'A', 'C', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
 							 {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
 							 {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'C', 'B', 'B', 'B', 'B', 'A', 'A', 'C', 'B', 'B', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'C', 'A', 'A'},
@@ -48,7 +48,7 @@ void CGameStateRun::OnInit()  								// ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 							 {'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'},
 							 {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'C', 'B', 'B', 'B', 'B', 'A', 'A', 'C', 'B', 'B', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'C', 'A', 'A'},
 							 {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'C', 'B', 'B', 'B', 'B', 'A', 'A', 'C', 'B', 'B', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'C', 'A', 'A'}
-							};
+	};
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 28; j++) {
 			switch (stage_map[i][j]) {
@@ -67,14 +67,14 @@ void CGameStateRun::OnInit()  								// ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 			default:
 				break;
 			}
-			
+
 			stage[i][j].SetTopLeft(j * 40, 80 + i * 44);
 		}
 	}
-	character.LoadBitmapByString({ 
+	character[0].LoadBitmapByString({
 								"resources/character/redhat_01.bmp",
 								"resources/character/redhat_02.bmp",
-								"resources/character/redhat_03.bmp",
+								"resources/character/redhat_03.bmp"/*,
 								"resources/character/redhat_04.bmp",
 								"resources/character/redhat_05.bmp",
 								"resources/character/redhat_06.bmp",
@@ -93,14 +93,54 @@ void CGameStateRun::OnInit()  								// ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 								"resources/character/redhat_19.bmp",
 								"resources/character/redhat_20.bmp",
 								"resources/character/redhat_21.bmp",
-								"resources/character/redhat_22.bmp"
+								"resources/character/redhat_22.bmp"*/
 	}, RGB(255, 255, 255));
-	character.SetTopLeft(50, 44 * 14 - 10);
+	character[1].LoadBitmapByString({
+								"resources/character/redhat_04.bmp",
+								"resources/character/redhat_05.bmp",
+								"resources/character/redhat_06.bmp",
+		}, RGB(255, 255, 255));
+	character[2].LoadBitmapByString({
+								"resources/character/redhat_07.bmp",
+								"resources/character/redhat_08.bmp",
+		}, RGB(255, 255, 255));
+	character[3].LoadBitmapByString({
+								"resources/character/redhat_09.bmp",
+								"resources/character/redhat_10.bmp",
+								"resources/character/redhat_11.bmp",
+		}, RGB(255, 255, 255));
+	character[0].SetTopLeft(50, 44 * 14 - 10);
+	character[1].SetTopLeft(50, 44 * 14 - 10);
+	character[2].SetTopLeft(50, 44 * 14 - 10);
+	character[3].SetTopLeft(50, 44 * 14 - 10);
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	
+	if (nChar == VK_LEFT) {
+
+	}
+	else if(nChar == VK_DOWN) {
+
+	}
+	else if (nChar == VK_RIGHT) {
+
+	}
+	else if (nChar == VK_UP) {
+
+	}
+	else if (nChar == VK_UP) {
+
+	}
+	else if (nChar == VK_UP) {
+
+	}
+	else if (nChar == 0x44) {
+
+	}
+	else if (nChar == 0x57) {
+
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -108,23 +148,23 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // è™•ç†æ»‘é¼ çš„å‹•ä½œ
 {
 }
 
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// è™•ç†æ»‘é¼ çš„å‹•ä½œ
 {
 }
 
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// è™•ç†æ»‘é¼ çš„å‹•ä½œ
 {
 }
 
-void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // è™•ç†æ»‘é¼ çš„å‹•ä½œ
 {
 }
 
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// è™•ç†æ»‘é¼ çš„å‹•ä½œ
 {
 }
 
@@ -135,14 +175,6 @@ void CGameStateRun::OnShow()
 			stage[i][j].ShowBitmap();
 		}
 	}
-	character.ShowBitmap();
-	if (character.GetFrameIndexOfBitmap() == 0) {
-		character.SetFrameIndexOfBitmap(1);
-	}
-	else if (character.GetFrameIndexOfBitmap() == 1) {
-		character.SetFrameIndexOfBitmap(2);
-	}
-	else if (character.GetFrameIndexOfBitmap() == 2) {
-		character.SetFrameIndexOfBitmap(0);
-	}
+	character[num].ShowBitmap();
+	character[num].SetAnimation(50, false);
 }

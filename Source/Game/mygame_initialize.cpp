@@ -9,7 +9,7 @@
 
 using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸¶}ÀYµe­±ª«¥ó
+// é€™å€‹classç‚ºéŠæˆ²çš„éŠæˆ²é–‹é ­ç•«é¢ç‰©ä»¶
 /////////////////////////////////////////////////////////////////////////////
 
 CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
@@ -19,17 +19,17 @@ CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
 void CGameStateInit::OnInit()
 {
 	//
-	// ·í¹Ï«Ü¦h®É¡AOnInit¸ü¤J©Ò¦³ªº¹Ï­nªá«Ü¦h®É¶¡¡C¬°Á×§Kª±¹CÀ¸ªº¤H
-	//     µ¥ªº¤£­@·Ğ¡A¹CÀ¸·|¥X²{¡uLoading ...¡v¡AÅã¥ÜLoadingªº¶i«×¡C
+	// ç•¶åœ–å¾ˆå¤šæ™‚ï¼ŒOnInitè¼‰å…¥æ‰€æœ‰çš„åœ–è¦èŠ±å¾ˆå¤šæ™‚é–“ã€‚ç‚ºé¿å…ç©éŠæˆ²çš„äºº
+	//     ç­‰çš„ä¸è€ç…©ï¼ŒéŠæˆ²æœƒå‡ºç¾ã€ŒLoading ...ã€ï¼Œé¡¯ç¤ºLoadingçš„é€²åº¦ã€‚
 	//
-	ShowInitProgress(0, "Start Initialize...");	// ¤@¶}©lªºloading¶i«×¬°0%
+	ShowInitProgress(0, "Start Initialize...");	// ä¸€é–‹å§‹çš„loadingé€²åº¦ç‚º0%
+	//
+	// é–‹å§‹è¼‰å…¥è³‡æ–™
+	//
 	load_background();
+	Sleep(1000);				// æ”¾æ…¢ï¼Œä»¥ä¾¿çœ‹æ¸…æ¥šé€²åº¦ï¼Œå¯¦éš›éŠæˆ²è«‹åˆªé™¤æ­¤Sleep
 	//
-	// ¶}©l¸ü¤J¸ê®Æ
-	//
-	//Sleep(1000);				// ©ñºC¡A¥H«K¬İ²M·¡¶i«×¡A¹ê»Ú¹CÀ¸½Ğ§R°£¦¹Sleep
-	//
-	// ¦¹OnInit°Ê§@·|±µ¨ìCGameStaterRun::OnInit()¡A©Ò¥H¶i«×ÁÙ¨S¨ì100%
+	// æ­¤OnInitå‹•ä½œæœƒæ¥åˆ°CGameStaterRun::OnInit()ï¼Œæ‰€ä»¥é€²åº¦é‚„æ²’åˆ°100%
 	//
 }
 
@@ -44,7 +44,7 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	GotoGameState(GAME_STATE_RUN);		// ¤Á´«¦ÜGAME_STATE_RUN
+	GotoGameState(GAME_STATE_RUN);		// åˆ‡æ›è‡³GAME_STATE_RUN
 }
 
 void CGameStateInit::OnShow()
@@ -53,19 +53,7 @@ void CGameStateInit::OnShow()
 }
 void CGameStateInit::load_background() {
 	background.LoadBitmapByString({
-		"resources/image/video0010.bmp",
-		"resources/image/video0001.bmp",
-		"resources/image/video0002.bmp",
-		"resources/image/video0003.bmp",
-		"resources/image/video0004.bmp",
-		"resources/image/video0005.bmp",
-		"resources/image/video0006.bmp",
-		"resources/image/video0007.bmp",
-		"resources/image/video0008.bmp",
-		"resources/image/video0009.bmp",
-		"resources/image/video0010.bmp"
+		"resources/start-1.bmp",
 	});
 	background.SetTopLeft(0, 0);
-	//background.SetAnimation(40, FALSE);
-	//background.SetAnimation(40, TRUE);
 }
