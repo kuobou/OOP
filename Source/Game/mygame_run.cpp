@@ -280,3 +280,4 @@ void CGameStateRun::OnShow()
 	monster3[0].ShowBitmap();
 	monster3[0].SetAnimation(50, false);
 }
+

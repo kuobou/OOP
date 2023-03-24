@@ -145,6 +145,7 @@ namespace game_framework {
 		//
 		// 呼叫每個狀態的OnInitialUpdate
 		//
+
 		for (int i = 0; i < num_GAME_STATES; i++)
 			gameStateTable[i]->OnInit();
 	}
