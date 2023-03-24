@@ -53,6 +53,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		for (int j = 0; j < 28; j++) {
 			switch (stage_map[i][j]) {
 			case 'A':
+				printf("hello world");
 				stage[i][j].LoadBitmapByString({ "resources/brick.bmp" });
 				break;
 			case 'B':
