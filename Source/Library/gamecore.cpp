@@ -30,7 +30,7 @@ namespace game_framework {
 	CGame CGame::instance;
 
 	CGame::CGame()
-		: NUM_GAME_STATES(3)
+		: num_GAME_STATES(3)
 	{
 		running = true;
 		suspended = false;
@@ -42,7 +42,7 @@ namespace game_framework {
 
 	CGame::~CGame()
 	{
-		for (int i = 0; i < NUM_GAME_STATES; i++)
+		for (int i = 0; i < num_GAME_STATES; i++)
 			delete gameStateTable[i];
 	}
 
@@ -145,7 +145,8 @@ namespace game_framework {
 		//
 		// 呼叫每個狀態的OnInitialUpdate
 		//
-		for (int i = 0; i < NUM_GAME_STATES; i++)
+
+		for (int i = 0; i < num_GAME_STATES; i++)
 			gameStateTable[i]->OnInit();
 	}
 
@@ -233,7 +234,7 @@ namespace game_framework {
 
 	void CGame::SetGameState(int state)
 	{
-		ASSERT(state >= 0 && state < NUM_GAME_STATES);
+		ASSERT(state >= 0 && state < num_GAME_STATES);
 		gameState = gameStateTable[state];
 		gameState->OnBeginState();
 		OnDraw();

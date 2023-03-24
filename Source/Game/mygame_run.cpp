@@ -93,55 +93,148 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 								"resources/character/redhat_19.bmp",
 								"resources/character/redhat_20.bmp",
 								"resources/character/redhat_21.bmp",
-								"resources/character/redhat_22.bmp"*/
+								"resources/character/redhat_22.bmp"*/   //爬右
 	}, RGB(255, 255, 255));
 	character[1].LoadBitmapByString({
 								"resources/character/redhat_04.bmp",
 								"resources/character/redhat_05.bmp",
-								"resources/character/redhat_06.bmp",
+								"resources/character/redhat_06.bmp",    //爬左
 		}, RGB(255, 255, 255));
 	character[2].LoadBitmapByString({
 								"resources/character/redhat_07.bmp",
-								"resources/character/redhat_08.bmp",
+								"resources/character/redhat_08.bmp",    //梯子
 		}, RGB(255, 255, 255));
 	character[3].LoadBitmapByString({
 								"resources/character/redhat_09.bmp",
 								"resources/character/redhat_10.bmp",
-								"resources/character/redhat_11.bmp",
+								"resources/character/redhat_11.bmp",    //繩索
 		}, RGB(255, 255, 255));
 	character[0].SetTopLeft(50, 44 * 14 - 10);
 	character[1].SetTopLeft(50, 44 * 14 - 10);
 	character[2].SetTopLeft(50, 44 * 14 - 10);
 	character[3].SetTopLeft(50, 44 * 14 - 10);
+
+	monster1[0].LoadBitmapByString({ "resources/monster1/01.bmp",
+								     "resources/monster1/02.bmp",
+								     "resources/monster1/03.bmp",
+		});
+	monster1[1].LoadBitmapByString({ "resources/monster1/04.bmp",
+							         "resources/monster1/05.bmp",
+							         "resources/monster1/06.bmp",
+		});
+	monster1[2].LoadBitmapByString({ "resources/monster1/07.bmp",
+							         "resources/monster1/08.bmp",
+		});
+	monster1[3].LoadBitmapByString({ "resources/monster1/09.bmp",
+							         "resources/monster1/10.bmp",
+							         "resources/monster1/11.bmp",
+		});
+	monster1[0].SetTopLeft(130, 44 * 9 - 10);
+	monster1[1].SetTopLeft(130, 44 * 9 - 10);
+	monster1[2].SetTopLeft(130, 44 * 9 - 10);
+	monster1[3].SetTopLeft(130, 44 * 9 - 10);
+
+	monster2[0].LoadBitmapByString({ "resources/monster2/01.bmp",
+								     "resources/monster2/02.bmp",
+								     "resources/monster2/03.bmp",
+		});
+	monster2[1].LoadBitmapByString({ "resources/monster2/04.bmp",
+									 "resources/monster2/05.bmp",
+									 "resources/monster2/06.bmp",
+		});
+	monster2[2].LoadBitmapByString({ "resources/monster2/07.bmp",
+									 "resources/monster2/08.bmp",
+		});
+	monster2[3].LoadBitmapByString({ "resources/monster2/09.bmp",
+									 "resources/monster2/10.bmp",
+									 "resources/monster2/11.bmp",
+		});
+	monster2[0].SetTopLeft(170, 44 * 9 - 10);
+	monster2[1].SetTopLeft(170, 44 * 9 - 10);
+	monster2[2].SetTopLeft(170, 44 * 9 - 10);
+	monster2[3].SetTopLeft(170, 44 * 9 - 10);
+
+	monster3[0].LoadBitmapByString({ "resources/monster3/01.bmp",
+							         "resources/monster3/02.bmp",
+							         "resources/monster3/03.bmp",
+		});
+	monster3[1].LoadBitmapByString({ "resources/monster3/04.bmp",
+									 "resources/monster3/05.bmp",
+									 "resources/monster3/06.bmp",
+		});
+	monster3[2].LoadBitmapByString({ "resources/monster3/07.bmp",
+									 "resources/monster3/08.bmp",
+		});
+	monster3[3].LoadBitmapByString({ "resources/monster3/09.bmp",
+									 "resources/monster3/10.bmp",
+									 "resources/monster3/11.bmp",
+		});
+	monster3[0].SetTopLeft(200, 44 * 9 - 10);
+	monster3[1].SetTopLeft(200, 44 * 9 - 10);
+	monster3[2].SetTopLeft(200, 44 * 9 - 10);
+	monster3[3].SetTopLeft(200, 44 * 9 - 10);
+
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	if (nChar == VK_LEFT) {
+	if (nChar == VK_LEFT || nChar == 0x41) {
+		stopanime = true;
+		character[1].SetTopLeft(character[num[0]].GetLeft() - speed, character[num[0]].GetTop());
+		if (num[0] == 1) {
+			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
+				character[num[0]].SetFrameIndexOfBitmap(0);
+			}
+			else {
+				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+			}
+		}
+		num[0] = 1;
+		
+	}
+	else if(nChar == VK_DOWN || nChar == 0x53) {
+		stopanime = true;
+		character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() + speed);
+		if (num[0] == 2) {
+			if (character[num[0]].GetFrameIndexOfBitmap() == 1) {
+				character[num[0]].SetFrameIndexOfBitmap(0);
+			}
+			else {
+				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+			}
+		}
+		num[0] = 2;
+	}
+	else if (nChar == VK_RIGHT || nChar == 0x44) {
+		stopanime = true;
+		character[0].SetTopLeft(character[num[0]].GetLeft() + speed, character[num[0]].GetTop());
+		if (num[0] == 0) {
+			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
+				character[num[0]].SetFrameIndexOfBitmap(0);
+			}
+			else {
+				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+			}
+		}
+		num[0] = 0;
 
 	}
-	else if(nChar == VK_DOWN) {
-
+	else if (nChar == VK_UP || nChar == 0x57) {
+		stopanime = true;
+		character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() - speed);
+		if (num[0] == 2) {
+			if (character[num[0]].GetFrameIndexOfBitmap() == 1) {
+				character[num[0]].SetFrameIndexOfBitmap(0);
+			}
+			else {
+				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+			}
+		}
+		num[0] = 2;
 	}
-	else if (nChar == VK_RIGHT) {
-
-	}
-	else if (nChar == VK_UP) {
-
-	}
-	else if (nChar == VK_UP) {
-
-	}
-	else if (nChar == VK_UP) {
-
-	}
-	else if (nChar == 0x44) {
-
-	}
-	else if (nChar == 0x57) {
-
-	}
+	
 }
+
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
@@ -175,6 +268,16 @@ void CGameStateRun::OnShow()
 			stage[i][j].ShowBitmap();
 		}
 	}
-	character[num].ShowBitmap();
-	character[num].SetAnimation(50, false);
+	character[num[0]].ShowBitmap();
+	character[num[0]].SetAnimation(50, stopanime);
+
+	monster1[num[1]].ShowBitmap();
+	monster1[num[1]].SetAnimation(50, false);
+
+	monster2[0].ShowBitmap();
+	monster2[0].SetAnimation(50, false);
+	
+	monster3[0].ShowBitmap();
+	monster3[0].SetAnimation(50, false);
 }
+

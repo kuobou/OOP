@@ -95,7 +95,13 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap stage[16][28];
 		CMovingBitmap character[4];
-		int num = 0;
+		CMovingBitmap monster1[4];
+		CMovingBitmap monster2[4];
+		CMovingBitmap monster3[4];
+		int num[10] = {0};								// 0是character 1是monster1  2是monster2 依此類推
+		int speed = 10;
+		bool stopanime = false;
+		
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

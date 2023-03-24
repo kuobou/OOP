@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 #include "../Core/Resource.h"
 #include <mmsystem.h>
@@ -56,4 +57,5 @@ void CGameStateInit::load_background() {
 		"resources/start-1.bmp",
 	});
 	background.SetTopLeft(0, 0);
+
 }
