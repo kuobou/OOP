@@ -27,7 +27,53 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
-	
+	//character[num[0]].SetTopLeft(character[num[0]].GetLeft() + 5, character[num[0]].GetTop());
+	/*if (monster1[num[1]].GetTop() != character[num[0]].GetTop()) {
+		for (int i = 0; i < 28; i++) {
+			if (i % 2 == 0) {
+				if (monster1[num[1]].GetTop() > character[num[0]].GetTop()) {
+					if (stage_map[(monster1[num[1]].GetTop() - 80) / 44][monster1[num[1]].GetLeft() + monster1[num[1]].GetWidth() / 2 + i / 2] == 3) {
+						if (i == 0) {
+							monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft(), monster1[num[1]].GetTop() - speed_y);
+							break;
+						}
+						else {
+							monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() + speed_x, monster1[num[1]].GetTop());
+							break;
+						}
+					}
+				}
+				else {
+					if (stage_map[(monster1[num[1]].GetTop() + monster1[num[1]].GetHeight() + speed_y - 80) / 44][(monster1[num[1]].GetLeft() + monster1[num[1]].GetWidth() / 2) / 40 + i / 2] == 3) {
+						
+						if (i == 0) {
+							monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft(), monster1[num[1]].GetTop() + speed_y);
+							break;
+						}
+						else {
+							monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() + speed_x, monster1[num[1]].GetTop());
+							break;
+						}
+					}
+				}
+			}
+			else {
+				if (monster1[num[1]].GetTop() > character[num[0]].GetTop()) {
+					if (stage_map[(monster1[num[1]].GetTop() - 80) / 44][(monster1[num[1]].GetLeft() + monster1[num[1]].GetWidth() / 2) / 40 + (i + 1) / 2] == 3) {
+						monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() - speed_x, monster1[num[1]].GetTop());
+					}
+				}
+			}
+		}
+	}
+	else {
+		if (monster1[num[1]].GetLeft() > character[num[0]].GetLeft()) {
+			monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() - speed_x, monster1[num[1]].GetTop());
+		}
+		else {
+			monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() + speed_x, monster1[num[1]].GetTop());
+		}
+	}*/
 }
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
@@ -180,7 +226,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_LEFT || nChar == 0x41) {
 		stopanime = true;
-		character[1].SetTopLeft(character[num[0]].GetLeft() - speed, character[num[0]].GetTop());
+		character[1].SetTopLeft(character[num[0]].GetLeft() - speed_x, character[num[0]].GetTop());
 		if (num[0] == 1) {
 			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
 				character[num[0]].SetFrameIndexOfBitmap(0);
@@ -195,10 +241,10 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	else if (nChar == VK_DOWN || nChar == 0x53) 
 	{
 		int x = character[num[0]].GetLeft() + character[num[0]].GetWidth() / 2;
-		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() + speed -18;
+		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() + speed_y;
 		if (stage_map[(y - 80) / 44][x / 40] == 3) {
 			stopanime = true;
-			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() + speed);
+			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() + speed_y);
 			if (num[0] == 2) {
 				if (character[num[0]].GetFrameIndexOfBitmap() == 1) {
 					character[num[0]].SetFrameIndexOfBitmap(0);
@@ -212,7 +258,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if (nChar == VK_RIGHT || nChar == 0x44) {
 		stopanime = true;
-		character[0].SetTopLeft(character[num[0]].GetLeft() + speed, character[num[0]].GetTop());
+		character[0].SetTopLeft(character[num[0]].GetLeft() + speed_x, character[num[0]].GetTop());
 		if (num[0] == 0) {
 			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
 				character[num[0]].SetFrameIndexOfBitmap(0);
@@ -228,11 +274,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		
 	int x = character[num[0]].GetLeft() + character[num[0]].GetWidth()/2;
-	int y = character[num[0]].GetTop() + character[num[0]].GetHeight() - speed-18;
+	int y = character[num[0]].GetTop() + character[num[0]].GetHeight();
 		if (stage_map[(y - 80) / 44][x / 40] == 3) 
 		{
 			stopanime = true;
-			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() - speed);
+			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() - speed_y);
 			if (num[0] == 2) 
 			{
 				if (character[num[0]].GetFrameIndexOfBitmap() == 1) 
@@ -290,12 +336,10 @@ void CGameStateRun::OnShow()
 
 	monster1[num[1]].ShowBitmap();
 	monster1[num[1]].SetAnimation(50, false);
-	monster2[0].ShowBitmap();
-	monster2[0].SetAnimation(50, false);
-	
-	
-	monster3[0].ShowBitmap();
-	monster3[0].SetAnimation(50, false);
+	monster2[num[2]].ShowBitmap();
+	monster2[num[2]].SetAnimation(50, false);
+	monster3[num[3]].ShowBitmap();
+	monster3[num[3]].SetAnimation(50, false);
 	//int x = character[num[0]].GetLeft() + character[num[0]].GetWidth()/2;
 	//int y = character[num[0]].GetTop() + character[num[0]].GetHeight()/2;
 	//if (stage_map[(y - 80) / 44][x / 40] == 1) {

@@ -99,7 +99,8 @@ namespace game_framework {
 		CMovingBitmap monster2[4];
 		CMovingBitmap monster3[4];
 		int num[10] = {0};								// 0是character 1是monster1  2是monster2 依此類推
-		int speed = 10;
+		int speed_x = 10;
+		int speed_y = 11;
 		bool stopanime = false;
 		int stage_map[16][28] = { {1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 							 {2, 2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
