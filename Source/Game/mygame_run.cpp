@@ -226,8 +226,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_LEFT || nChar == 0x41) {
 		stopanime = true;
-		character[1].SetTopLeft(character[num[0]].GetLeft() - speed_x, character[num[0]].GetTop());
-		if (num[0] == 1) {
+		int x = character[num[0]].GetLeft();
+		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() / 2;
+		if (stage_map[(y - 80) / 44][x / 40] == 4) {
+			character[3].SetTopLeft(character[num[0]].GetLeft() - speed_x, character[num[0]].GetTop());
+			num[0] = 3;
 			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
 				character[num[0]].SetFrameIndexOfBitmap(0);
 			}
@@ -235,8 +238,18 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
 			}
 		}
-		num[0] = 1;
-		
+		else if(stage_map[(y - 80) / 44][x / 40] != 1){
+			character[1].SetTopLeft(character[num[0]].GetLeft() - speed_x, character[num[0]].GetTop());
+			if (num[0] == 1) {
+				if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
+					character[num[0]].SetFrameIndexOfBitmap(0);
+				}
+				else {
+					character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			num[0] = 1;
+		}
 	}
 	else if (nChar == VK_DOWN || nChar == 0x53) 
 	{
@@ -258,8 +271,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if (nChar == VK_RIGHT || nChar == 0x44) {
 		stopanime = true;
-		character[0].SetTopLeft(character[num[0]].GetLeft() + speed_x, character[num[0]].GetTop());
-		if (num[0] == 0) {
+		int x = character[num[0]].GetLeft() + character[num[0]].GetWidth();
+		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() / 2;
+		if (stage_map[(y - 80) / 44][x / 40] == 4) {
+			character[3].SetTopLeft(character[num[0]].GetLeft() + speed_x, character[num[0]].GetTop());
+			num[0] = 3;
 			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
 				character[num[0]].SetFrameIndexOfBitmap(0);
 			}
@@ -267,8 +283,18 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
 			}
 		}
-		num[0] = 0;
-		
+		else if (stage_map[(y - 80) / 44][x / 40] != 1) {
+			character[0].SetTopLeft(character[num[0]].GetLeft() + speed_x, character[num[0]].GetTop());
+			if (num[0] == 0) {
+				if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
+					character[num[0]].SetFrameIndexOfBitmap(0);
+				}
+				else {
+					character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			num[0] = 0;
+		}
 	}
 	else if (nChar == VK_UP || nChar == 0x57)
 	{
