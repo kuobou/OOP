@@ -48,7 +48,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 							 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
 							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1}
-	};*/
+	};*/                                //1 是方塊 2是黑色的 3是梯子 4是繩索
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 28; j++) {
 			switch (stage_map[i][j]) {
@@ -192,18 +192,23 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		num[0] = 1;
 		
 	}
-	else if(nChar == VK_DOWN || nChar == 0x53) {
-		stopanime = true;
-		character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() + speed);
-		if (num[0] == 2) {
-			if (character[num[0]].GetFrameIndexOfBitmap() == 1) {
-				character[num[0]].SetFrameIndexOfBitmap(0);
+	else if (nChar == VK_DOWN || nChar == 0x53) 
+	{
+		int x = character[num[0]].GetLeft() + character[num[0]].GetWidth() / 2;
+		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() + speed -18;
+		if (stage_map[(y - 80) / 44][x / 40] == 3) {
+			stopanime = true;
+			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() + speed);
+			if (num[0] == 2) {
+				if (character[num[0]].GetFrameIndexOfBitmap() == 1) {
+					character[num[0]].SetFrameIndexOfBitmap(0);
+				}
+				else {
+					character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+				}
 			}
-			else {
-				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
-			}
+			num[0] = 2;
 		}
-		num[0] = 2;
 	}
 	else if (nChar == VK_RIGHT || nChar == 0x44) {
 		stopanime = true;
@@ -217,22 +222,32 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 		}
 		num[0] = 0;
-
+		
 	}
-	else if (nChar == VK_UP || nChar == 0x57) {
-		stopanime = true;
-		character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() - speed);
-		if (num[0] == 2) {
-			if (character[num[0]].GetFrameIndexOfBitmap() == 1) {
-				character[num[0]].SetFrameIndexOfBitmap(0);
+	else if (nChar == VK_UP || nChar == 0x57)
+	{
+		
+	int x = character[num[0]].GetLeft() + character[num[0]].GetWidth()/2;
+	int y = character[num[0]].GetTop() + character[num[0]].GetHeight() - speed-18;
+		if (stage_map[(y - 80) / 44][x / 40] == 3) 
+		{
+			stopanime = true;
+			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() - speed);
+			if (num[0] == 2) 
+			{
+				if (character[num[0]].GetFrameIndexOfBitmap() == 1) 
+				{
+					character[num[0]].SetFrameIndexOfBitmap(0);
+				}
+				else 
+				{
+					character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
+				}
 			}
-			else {
-				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
-			}
+			num[0] = 2;
 		}
-		num[0] = 2;
 	}
-	
+
 }
 
 
@@ -275,17 +290,24 @@ void CGameStateRun::OnShow()
 
 	monster1[num[1]].ShowBitmap();
 	monster1[num[1]].SetAnimation(50, false);
-
+	monster2[0].ShowBitmap();
+	monster2[0].SetAnimation(50, false);
 	
 	
 	monster3[0].ShowBitmap();
 	monster3[0].SetAnimation(50, false);
-	int x = character[num[0]].GetLeft() + character[num[0]].GetWidth()/2;
-	int y = character[num[0]].GetTop() + character[num[0]].GetHeight()/2;
-	if (stage_map[(y - 80) / 44][x / 40] == 1) {
+	//int x = character[num[0]].GetLeft() + character[num[0]].GetWidth()/2;
+	//int y = character[num[0]].GetTop() + character[num[0]].GetHeight()/2;
+	//if (stage_map[(y - 80) / 44][x / 40] == 1) {
 		//monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft(), monster1[num[1]].GetTop() - 5);
-		monster2[0].ShowBitmap();
-		monster2[0].SetAnimation(50, false);
-	}
 }
+	
+	/*int x = character[num[0]].GetLeft() + character[num[0]].GetWidth() //右邊
+	int x = character[num[0]].GetLeft()  //左邊
+	int y = character[num[0]].GetTop() + character[num[0]].GetHeight()  //底部
+	int y = character[num[0]].GetTop()  //頭頂
+	*/
+
+
+
 
