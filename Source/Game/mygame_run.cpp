@@ -79,23 +79,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
-	/*stage_map[16][28] = { {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-		                     {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-							 {1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-							 {2, 2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
-							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2},
-							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2},
-							 {1, 1, 3, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1},
-							 {2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2},
-							 {2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2},
-							 {1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2},
-							 {2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2},
-							 {2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 2, 2, 2, 2, 2, 2, 2},
-							 {2, 2, 2, 2, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3},
-							 {2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
-							 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	};       */                      //1 是方塊 2是黑色的 3是梯子 4是繩索
+
 	ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 
 	int map[18][28];
@@ -111,34 +95,34 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		for (int j = 0; j < 28; j++) {
 			switch (map[i][j]) {
 			case 0:
-				stage[i][j].LoadBitmapByString({ "resources/brick.bmp" });
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/brick.bmp" });
 				break;
 			case 1:
-				stage[i][j].LoadBitmapByString({ "resources/black.bmp" });
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/black.bmp" });
 				break;
 			case 2:
-				stage[i][j].LoadBitmapByString({ "resources/ladder.bmp" });
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/ladder.bmp" });
 				break;
 			case 3:
-				stage[i][j].LoadBitmapByString({ "resources/rope.bmp" });
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/rope.bmp" });
 				break;
 			case 4:
-				stage[i][j].LoadBitmapByString({ "resources/gold.bmp" });
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/gold.bmp" });
 				break;
 			case 5:
-				stage[i][j].LoadBitmapByString({ "resources/block.bmp" });
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/block.bmp" });
 				break;
 			default:
 				break;
 			}
-			stage[i][j].SetTopLeft(j * 40, i * 44);
+			stage[stageid - 1][i][j].SetTopLeft(j * 40, i * 44);
 		}
 	}
 	for (int i = 0; i < 28; i++) {
-		stage[16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
-		stage[16][i].SetTopLeft( i * 40, 16 * 44);
-		stage[17][i].LoadBitmapByString({ "resources/brick.bmp" });
-		stage[17][i].SetTopLeft(i * 40, 17 * 44 - 22);
+		stage[stageid - 1][16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][16][i].SetTopLeft( i * 40, 16 * 44);
+		stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
+		stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 	}
 	character[0].LoadBitmapByString({
 								"resources/character/redhat_01.bmp",
@@ -178,10 +162,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 								"resources/character/redhat_10.bmp",
 								"resources/character/redhat_11.bmp",    //繩索
 		}, RGB(255, 255, 255));
-	character[0].SetTopLeft(50, 44 * 14 - 10);
-	character[1].SetTopLeft(50, 44 * 14 - 10);
-	character[2].SetTopLeft(50, 44 * 14 - 10);
-	character[3].SetTopLeft(50, 44 * 14 - 10);
+	character[0].SetTopLeft(40, 44 * 14);
+	character[1].SetTopLeft(40, 44 * 14);
+	character[2].SetTopLeft(40, 44 * 14);
+	character[3].SetTopLeft(40, 44 * 14);
 
 	monster1[0].LoadBitmapByString({ "resources/monster1/01.bmp",
 								     "resources/monster1/02.bmp",
@@ -198,10 +182,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 							         "resources/monster1/10.bmp",
 							         "resources/monster1/11.bmp",
 		}, RGB(0, 0, 0));
-	monster1[0].SetTopLeft(130, 44 * 9 - 10);
-	monster1[1].SetTopLeft(130, 44 * 9 - 10);
-	monster1[2].SetTopLeft(130, 44 * 9 - 10);
-	monster1[3].SetTopLeft(130, 44 * 9 - 10);
+	monster1[0].SetTopLeft(120, 44 * 9);
+	monster1[1].SetTopLeft(120, 44 * 9);
+	monster1[2].SetTopLeft(120, 44 * 9);
+	monster1[3].SetTopLeft(120, 44 * 9);
 
 	monster2[0].LoadBitmapByString({ "resources/monster2/01.bmp",
 								     "resources/monster2/02.bmp",
@@ -218,10 +202,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 									 "resources/monster2/10.bmp",
 									 "resources/monster2/11.bmp",
 		}, RGB(0, 0, 0));
-	monster2[0].SetTopLeft(170, 44 * 9 - 10);
-	monster2[1].SetTopLeft(170, 44 * 9 - 10);
-	monster2[2].SetTopLeft(170, 44 * 9 - 10);
-	monster2[3].SetTopLeft(170, 44 * 9 - 10);
+	monster2[0].SetTopLeft(160, 44 * 9);
+	monster2[1].SetTopLeft(160, 44 * 9);
+	monster2[2].SetTopLeft(160, 44 * 9);
+	monster2[3].SetTopLeft(160, 44 * 9);
 
 	monster3[0].LoadBitmapByString({ "resources/monster3/01.bmp",
 							         "resources/monster3/02.bmp",
@@ -238,10 +222,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 									 "resources/monster3/10.bmp",
 									 "resources/monster3/11.bmp",
 		}, RGB(0, 0, 0));
-	monster3[0].SetTopLeft(200, 44 * 9 - 10);
-	monster3[1].SetTopLeft(200, 44 * 9 - 10);
-	monster3[2].SetTopLeft(200, 44 * 9 - 10);
-	monster3[3].SetTopLeft(200, 44 * 9 - 10);
+	monster3[0].SetTopLeft(200, 44 * 9);
+	monster3[1].SetTopLeft(200, 44 * 9);
+	monster3[2].SetTopLeft(200, 44 * 9);
+	monster3[3].SetTopLeft(200, 44 * 9);
 
 }
 
@@ -251,7 +235,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		stopanime = true;
 		int x = character[num[0]].GetLeft();
 		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() / 2;
-		if (stage_map[(y - 80) / 44][x / 40] == 4) {
+		if (map[y / 44][x / 40] == 3) {
 			character[3].SetTopLeft(character[num[0]].GetLeft() - speed_x, character[num[0]].GetTop());
 			num[0] = 3;
 			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
@@ -261,7 +245,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
 			}
 		}
-		else if(stage_map[(y - 80) / 44][x / 40] != 1){
+		else if(map[y / 44][x / 40] != 0){
 			character[1].SetTopLeft(character[num[0]].GetLeft() - speed_x, character[num[0]].GetTop());
 			if (num[0] == 1) {
 				if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
@@ -278,7 +262,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		int x = character[num[0]].GetLeft() + character[num[0]].GetWidth() / 2;
 		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() + speed_y;
-		if (stage_map[(y - 80) / 44][x / 40] == 3) {
+		if (map[y / 44][x / 40] == 2) {
 			stopanime = true;
 			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() + speed_y);
 			if (num[0] == 2) {
@@ -296,7 +280,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		stopanime = true;
 		int x = character[num[0]].GetLeft() + character[num[0]].GetWidth();
 		int y = character[num[0]].GetTop() + character[num[0]].GetHeight() / 2;
-		if (stage_map[(y - 80) / 44][x / 40] == 4) {
+		if (map[y / 44][x / 40] == 3) {
 			character[3].SetTopLeft(character[num[0]].GetLeft() + speed_x, character[num[0]].GetTop());
 			num[0] = 3;
 			if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
@@ -306,7 +290,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				character[num[0]].SetFrameIndexOfBitmap(character[num[0]].GetFrameIndexOfBitmap() + 1);
 			}
 		}
-		else if (stage_map[(y - 80) / 44][x / 40] != 1) {
+		else if (map[y / 44][x / 40] != 0) {
 			character[0].SetTopLeft(character[num[0]].GetLeft() + speed_x, character[num[0]].GetTop());
 			if (num[0] == 0) {
 				if (character[num[0]].GetFrameIndexOfBitmap() == 2) {
@@ -324,7 +308,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		
 	int x = character[num[0]].GetLeft() + character[num[0]].GetWidth()/2;
 	int y = character[num[0]].GetTop() + character[num[0]].GetHeight();
-		if (stage_map[(y - 80) / 44][x / 40] == 3) 
+		if (map[y / 44][x / 40] == 2) 
 		{
 			stopanime = true;
 			character[2].SetTopLeft(character[num[0]].GetLeft(), character[num[0]].GetTop() - speed_y);
@@ -342,7 +326,54 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			num[0] = 2;
 		}
 	}
+	else if (nChar == VK_SPACE)
+	{
+		stageid++;
+		ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 
+		int map[18][28];
+
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 28; j++) {
+				ifs >> map[i][j];
+			}
+		}
+
+		ifs.close();
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 28; j++) {
+				switch (map[i][j]) {
+				case 0:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/brick.bmp" });
+					break;
+				case 1:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/black.bmp" });
+					break;
+				case 2:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/ladder.bmp" });
+					break;
+				case 3:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/rope.bmp" });
+					break;
+				case 4:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/gold.bmp" });
+					break;
+				case 5:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/block.bmp" });
+					break;
+				default:
+					break;
+				}
+				stage[stageid - 1][i][j].SetTopLeft(j * 40, i * 44);
+			}
+		}
+		for (int i = 0; i < 28; i++) {
+			stage[stageid - 1][16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
+			stage[stageid - 1][16][i].SetTopLeft( i * 40, 16 * 44);
+			stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
+			stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
+		}
+	}
 }
 
 
@@ -373,11 +404,11 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動
 
 void CGameStateRun::OnShow()
 {
-	//CDC *pDC = CDDraw::GetBackCDC();
-	//CTextDraw::Print(pDC, 300, 600, "Some text here.");
+	CDC *pDC = CDDraw::GetBackCDC();
+	CTextDraw::Print(pDC, 300, 600, "Some text here.");
 	for (int i = 0; i < 18; i++) {
 		for (int j = 0; j < 28; j++) {
-			stage[i][j].ShowBitmap();
+			stage[stageid - 1][i][j].ShowBitmap();
 		}
 	}
 	character[num[0]].ShowBitmap();

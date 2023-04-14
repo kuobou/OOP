@@ -93,7 +93,7 @@ namespace game_framework {
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
 		CMovingBitmap background;
-		CMovingBitmap stage[18][28];
+		CMovingBitmap stage[150][18][28];
 		CMovingBitmap character[4];
 		CMovingBitmap monster1[4];
 		CMovingBitmap monster2[4];
@@ -120,6 +120,7 @@ namespace game_framework {
 							 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		};
 		int stageid = 1;
+		int map[18][28];
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
