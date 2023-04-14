@@ -6,7 +6,8 @@
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
 #include "mygame.h"
-
+#include <fstream>
+#include <string>
 using namespace game_framework;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -78,7 +79,9 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
-	/*int stage_map[16][28] = { {1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+	/*stage_map[16][28] = { {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+		                     {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+							 {1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 							 {2, 2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
 							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2},
@@ -91,31 +94,51 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 							 {2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 2, 2, 2, 2, 2, 2, 2},
 							 {2, 2, 2, 2, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3},
 							 {2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3},
-							 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1},
-							 {2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 1, 1, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1}
-	};*/                                //1 是方塊 2是黑色的 3是梯子 4是繩索
+							 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	};       */                      //1 是方塊 2是黑色的 3是梯子 4是繩索
+	ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
+
+	int map[18][28];
+
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 28; j++) {
-			switch (stage_map[i][j]) {
-			case 1:
+			ifs >> map[i][j];
+		}
+	}
+
+	ifs.close();
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 28; j++) {
+			switch (map[i][j]) {
+			case 0:
 				stage[i][j].LoadBitmapByString({ "resources/brick.bmp" });
 				break;
-			case 2:
+			case 1:
 				stage[i][j].LoadBitmapByString({ "resources/black.bmp" });
 				break;
-			case 3:
+			case 2:
 				stage[i][j].LoadBitmapByString({ "resources/ladder.bmp" });
 				break;
-			case 4:
+			case 3:
 				stage[i][j].LoadBitmapByString({ "resources/rope.bmp" });
+				break;
+			case 4:
+				stage[i][j].LoadBitmapByString({ "resources/gold.bmp" });
+				break;
+			case 5:
+				stage[i][j].LoadBitmapByString({ "resources/block.bmp" });
 				break;
 			default:
 				break;
 			}
-
-			stage[i][j].SetTopLeft(j * 40, 80 + i * 44);
+			stage[i][j].SetTopLeft(j * 40, i * 44);
 		}
+	}
+	for (int i = 0; i < 28; i++) {
+		stage[16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
+		stage[16][i].SetTopLeft( i * 40, 16 * 44);
+		stage[17][i].LoadBitmapByString({ "resources/brick.bmp" });
+		stage[17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 	}
 	character[0].LoadBitmapByString({
 								"resources/character/redhat_01.bmp",
@@ -352,7 +375,7 @@ void CGameStateRun::OnShow()
 {
 	//CDC *pDC = CDDraw::GetBackCDC();
 	//CTextDraw::Print(pDC, 300, 600, "Some text here.");
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 18; i++) {
 		for (int j = 0; j < 28; j++) {
 			stage[i][j].ShowBitmap();
 		}
