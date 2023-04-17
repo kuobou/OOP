@@ -29,7 +29,8 @@ void CGameStateRun::OnBeginState()
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
 	int left, right, x;
-	//int downstair[2] = { -1, -1 };
+	downstair[0] = -1;
+	downstair[1] = -1;
 	int upstair[2] = { -1, -1 };
 	//character[num[0]].SetTopLeft(character[num[0]].GetLeft() + 5, character[num[0]].GetTop());
 	if (monster1[num[1]].GetTop() % 44 != 0) {
@@ -44,30 +45,37 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		x = monster1[num[1]].GetLeft() / 40;
 		left = x - 1;
 		right = x + 1;
-		while (map[monster1[num[1]].GetTop() / 44 + 1][left] != 1 && monster1[num[1]].GetLeft() > 0) {
-			if (map[monster1[num[1]].GetTop() / 44][left] == 2) {
-				upstair[0] = left;
-				break;
-			}
-			else if (map[monster1[num[1]].GetTop() / 44 + 1][left] == 2) {
-				downstair[0] = left;
-				break;
+		while (monster1[num[1]].GetLeft() > 0) {
+			if (map[monster1[num[1]].GetTop() / 44][left] == 3 || map[monster1[num[1]].GetTop() / 44 + 1][left] != 1) {
+				if (map[monster1[num[1]].GetTop() / 44][left] == 2) {
+					upstair[0] = left;
+					break;
+				}
+				else if (map[monster1[num[1]].GetTop() / 44 + 1][left] == 2) {
+					downstair[0] = left;
+					break;
+				}
 			}
 			left--;
 		}
-		while (map[monster1[num[1]].GetTop() / 44 + 1][right] != 1 && monster1[num[1]].GetLeft() < 27 * 44) {
-			if (map[monster1[num[1]].GetTop() / 44][right] == 2) {
-				upstair[1] = right;
-				break;
-			}
-			else if (map[monster1[num[1]].GetTop() / 44 + 1][right] == 2) {
-				downstair[1] = right;
-				break;
+		while (monster1[num[1]].GetLeft() < 27 * 44) {
+			if (map[monster1[num[1]].GetTop() / 44][right] == 3 || map[monster1[num[1]].GetTop() / 44 + 1][right] != 1) {
+				if (map[monster1[num[1]].GetTop() / 44][right] == 2) {
+					upstair[1] = right;
+					break;
+				}
+				else if (map[monster1[num[1]].GetTop() / 44 + 1][right] == 2) {
+					downstair[1] = right;
+					break;
+				}
 			}
 			right++;
 		}
 		if (monster1[num[1]].GetTop() > character[num[0]].GetTop()) {
 			if (map[monster1[num[1]].GetTop() / 44][x] == 2) {
+				upstair[0] = x;
+			}
+			if (map[monster1[num[1]].GetTop() / 44][x] == 2 && monster1[num[1]].GetLeft() % 40 == 0) {
 				monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft(), monster1[num[1]].GetTop() - speed_y);
 				stair = true;
 			}
@@ -88,7 +96,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 				}
 			}
 			else {
-				if (map[monster1[num[1]].GetTop() / 44 + 1][x] == 2) {
+				if (map[monster1[num[1]].GetTop() / 44 + 1][x] == 2 && monster1[num[1]].GetLeft() % 40 == 0) {
 					monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft(), monster1[num[1]].GetTop() + speed_y);
 					stair = false;
 				}
@@ -112,6 +120,9 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		}
 		else {
 			if (map[monster1[num[1]].GetTop() / 44 + 1][x] == 2) {
+				downstair[0] = x;
+			}
+			if (map[monster1[num[1]].GetTop() / 44 + 1][x] == 2 && monster1[num[1]].GetLeft() % 40 == 0) {
 				monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft(), monster1[num[1]].GetTop() + speed_y);
 				stair = false;
 			}
@@ -132,13 +143,13 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 				}
 			}
 			else {
-				if (map[monster1[num[1]].GetTop() / 44][x] == 2) {
+				if (map[monster1[num[1]].GetTop() / 44][x] == 2 && monster1[num[1]].GetLeft() % 40 == 0) {
 					monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft(), monster1[num[1]].GetTop() - speed_y);
 					stair = true;
 				}
 				else if (upstair[0] != -1 || upstair[1] != -1) {
 					if (upstair[0] != -1 && upstair[1] != -1) {
-						if (x - upstair[0] > upstair[1] - x) {
+						if (character[num[0]].GetLeft() > monster1[num[1]].GetLeft()) {
 							monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() + speed_x, monster1[num[1]].GetTop());
 						}
 						else {
@@ -149,7 +160,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 						monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() - speed_x, monster1[num[1]].GetTop());
 					}
 					else {
-
 						monster1[num[1]].SetTopLeft(monster1[num[1]].GetLeft() + speed_x, monster1[num[1]].GetTop());
 					}
 				}
