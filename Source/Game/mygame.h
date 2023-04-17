@@ -121,6 +121,9 @@ namespace game_framework {
 		};
 		int stageid = 1;
 		int map[18][28];
+		bool stair;
+		int test = -100;
+		int downstair[2] = { -1, -1 };
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
