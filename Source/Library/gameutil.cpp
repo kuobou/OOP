@@ -425,4 +425,141 @@ namespace game_framework {
 		f.CreateFontIndirect(&lf);
 		fp = pDC->SelectObject(&f);
 	}
+	void CMovingBitmap::Animation(int num) {
+		switch (num)
+		{
+		case 0:
+			Sleep(10);
+			if (pos == 0 && !stopanimate) {
+				if (GetFrameIndexOfBitmap() == 2) {
+					SetFrameIndexOfBitmap(0);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+				pos = num;
+			}
+			break;
+		case 1:
+			if (pos == 1) {
+				if (GetFrameIndexOfBitmap() == 2) {
+					SetFrameIndexOfBitmap(0);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(0);
+			}
+			pos = num;
+			break;
+		case 2:
+			if (pos == 2) {
+				if (GetFrameIndexOfBitmap() == 5) {
+					SetFrameIndexOfBitmap(3);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(3);
+			}
+			pos = num;
+			break;
+		case 3:
+			if (pos == 3) {
+				if (GetFrameIndexOfBitmap() == 7) {
+					SetFrameIndexOfBitmap(6);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(6);
+			}
+			pos = num;
+			break;
+		case 4:
+			if (pos == 4) {
+				if (GetFrameIndexOfBitmap() == 10) {
+					SetFrameIndexOfBitmap(8);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(8);
+			}
+			pos = num;
+			break;
+		case 5:
+			if (pos == 5) {
+				if (GetFrameIndexOfBitmap() == 13) {
+					SetFrameIndexOfBitmap(11);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(11);
+			}
+			pos = num;
+			break;
+		case 6:
+			if (pos == 6) {
+				if (GetFrameIndexOfBitmap() == 16) {
+					SetFrameIndexOfBitmap(14);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(14);
+			}
+			pos = num;
+			break;
+		case 7:
+			if (pos == 7) {
+				if (GetFrameIndexOfBitmap() == 18) {
+					SetFrameIndexOfBitmap(17);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(17);
+			}
+			pos = num;
+			break;
+		case 8:
+			if (pos == 8) {
+				if (GetFrameIndexOfBitmap() == 22) {
+					SetFrameIndexOfBitmap(19);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(19);
+			}
+			pos = num;
+			break;
+		default:
+			break;
+		}
+	}
+	int CMovingBitmap::GetPos() {
+		return pos;
+	}
+	void CMovingBitmap::StopAnimation() {
+		stopanimate = true;
+	}
 }         

@@ -94,14 +94,13 @@ namespace game_framework {
 	private:
 		CMovingBitmap background;
 		CMovingBitmap stage[150][18][28];
-		CMovingBitmap character[4];
-		CMovingBitmap monster1[4];
-		CMovingBitmap monster2[4];
-		CMovingBitmap monster3[4];
-		int num[10] = {0};								// 0是character 1是monster1  2是monster2 依此類推
+		CMovingBitmap character;
+		CMovingBitmap monster1;
+		CMovingBitmap monster2;
+		CMovingBitmap monster3;
+		//int num[10] = {0};								// 0是character 1是monster1  2是monster2 依此類推
 		int speed_x = 10;
 		int speed_y = 11;
-		bool stopanime = false;
 		int stage_map[16][28]{ {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 							 {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 							 {1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
@@ -121,9 +120,10 @@ namespace game_framework {
 		};
 		int stageid = 1;
 		int map[18][28];
-		bool stair;
+		int direction = 0;
 		int test = -100;
 		int downstair[2] = { -1, -1 };
+		int upstair[2] = { -1, -1 };
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

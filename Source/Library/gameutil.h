@@ -122,6 +122,9 @@ namespace game_framework {
 		/* Toggle function */
 		void  ToggleAnimation();
 
+		void CMovingBitmap::Animation(int num);
+		int GetPos();
+		void CMovingBitmap::StopAnimation();
 	protected:
 		//! 當前幀的索引值。
 		int frameIndex = 0;
@@ -145,6 +148,8 @@ namespace game_framework {
 		//! 儲存物件過濾的圖片顏色
 		COLORREF filterColor = CLR_INVALID;
 
+		int pos = 0;
+		bool stopanimate = false;
 	private:
 		void InitializeRectByBITMAP(BITMAP bitmap);
 		void ShowBitmapBySetting();
