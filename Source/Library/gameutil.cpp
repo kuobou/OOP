@@ -425,6 +425,122 @@ namespace game_framework {
 		f.CreateFontIndirect(&lf);
 		fp = pDC->SelectObject(&f);
 	}
+	void CMovingBitmap::C_Animation(int num) {
+		switch (num)
+		{
+		case 0:
+			Sleep(10);
+			if (pos == 0 && !stopanimate) {
+				if (GetFrameIndexOfBitmap() == 2) {
+					SetFrameIndexOfBitmap(0);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+				pos = num;
+			}
+			break;
+		case 1:
+			if (pos == 1) {
+				if (GetFrameIndexOfBitmap() == 2) {
+					SetFrameIndexOfBitmap(0);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(0);
+			}
+			pos = num;
+			break;
+		case 2:
+			if (pos == 2) {
+				if (GetFrameIndexOfBitmap() == 5) {
+					SetFrameIndexOfBitmap(3);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(3);
+			}
+			pos = num;
+			break;
+		case 3:
+			if (pos == 3) {
+				if (GetFrameIndexOfBitmap() == 7) {
+					SetFrameIndexOfBitmap(6);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(6);
+			}
+			pos = num;
+			break;
+		case 4:
+			if (pos == 4) {
+				SetFrameIndexOfBitmap(8);
+			}
+			else {
+				SetFrameIndexOfBitmap(8);
+			}
+			pos = num;
+			break;
+		case 5:
+			if (pos == 5) {
+				if (GetFrameIndexOfBitmap() == 11) {
+					SetFrameIndexOfBitmap(9);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(11);
+			}
+			pos = num;
+			break;
+		case 6:
+			if (pos == 6) {
+				if (GetFrameIndexOfBitmap() == 14) {
+					SetFrameIndexOfBitmap(12);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(14);
+			}
+			pos = num;
+			break;
+		case 7:
+			if (pos == 7) {
+				if (GetFrameIndexOfBitmap() == 16) {
+					SetFrameIndexOfBitmap(15);
+				}
+				else {
+					SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+				}
+			}
+			else {
+				SetFrameIndexOfBitmap(17);
+			}
+			pos = num;
+			break;
+		case 8:
+			SetFrameIndexOfBitmap(17);
+			pos = num;
+			break;
+		default:
+			break;
+		}
+	}
 	void CMovingBitmap::Animation(int num) {
 		switch (num)
 		{
@@ -539,7 +655,7 @@ namespace game_framework {
 			pos = num;
 			break;
 		case 8:
-			if (pos == 8) {
+			if (0) {
 				if (GetFrameIndexOfBitmap() == 22) {
 					SetFrameIndexOfBitmap(19);
 				}
@@ -562,4 +678,25 @@ namespace game_framework {
 	void CMovingBitmap::StopAnimation() {
 		stopanimate = true;
 	}
+	bool  CMovingBitmap::IsGround(int map[18][28]) {
+		int x = GetLeft();
+		int y = GetTop();
+		if (map[y / 44 + 1][x / 40] == 0 || map[y / 44 + 1][x / 40] == 2 || map[y / 44][x / 40] == 3) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	bool CMovingBitmap::IsGold(int map[18][28]) {
+		int x = GetLeft();
+		int y = GetTop();
+		if (map[y / 44][x / 40] == 4 && x % 40 == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }         
+

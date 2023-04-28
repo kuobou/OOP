@@ -123,8 +123,11 @@ namespace game_framework {
 		void  ToggleAnimation();
 
 		void CMovingBitmap::Animation(int num);
-		int GetPos();
+		void CMovingBitmap::C_Animation(int num);
+		int  GetPos();
 		void CMovingBitmap::StopAnimation();
+		bool CMovingBitmap::IsGround(int map[18][28]);
+		bool CMovingBitmap::IsGold(int map[18][28]);
 	protected:
 		//! 當前幀的索引值。
 		int frameIndex = 0;

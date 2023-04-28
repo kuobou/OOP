@@ -28,12 +28,71 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	test = gold;
+	if (gold == 0) {
+		gold = 0;
+		stageid++;
+		ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
+
+
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 28; j++) {
+				ifs >> map[i][j];
+			}
+		}
+
+		ifs.close();
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 28; j++) {
+				switch (map[i][j]) {
+				case 0:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/brick.bmp" });
+					break;
+				case 1:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/black.bmp" });
+					break;
+				case 2:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/ladder.bmp" });
+					break;
+				case 3:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/rope.bmp"  });
+					break;
+				case 4:
+					gold++;
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/gold.bmp" ,"resources/black.bmp" });
+					break;
+				case 5:
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/block.bmp" });
+					break;
+				default:
+					break;
+				}
+				stage[stageid - 1][i][j].SetTopLeft(j * 40, i * 44);
+			}
+		}
+		for (int i = 0; i < 28; i++) {
+			stage[stageid - 1][16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
+			stage[stageid - 1][16][i].SetTopLeft(i * 40, 16 * 44);
+			stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
+			stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
+		}
+	}
+	if (character.GetPos() == 8) {
+		if (!character.IsGround(map)) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+		}
+	}
+	if (character.IsGold(map)) {
+		map[character.GetTop() / 44][character.GetLeft() / 40] = 1;
+		stage[stageid - 1][character.GetTop() / 44][character.GetLeft() / 40].SetFrameIndexOfBitmap(1);
+		gold--;
+	}
 	if (direction == 0) {
 		int left, right, x;
 		downstair[0] = -1;
 		downstair[1] = -1;
 		upstair[0] = -1;
-		upstair[1] = -1;		
+		upstair[1] = -1;	
 		if (monster1.GetTop() != character.GetTop() && character.GetTop() % 44 == 0) {
 			x = monster1.GetLeft() / 40;
 			left = x - 1;
@@ -73,50 +132,60 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 				if (map[monster1.GetTop() / 44][x] == 2 && monster1.GetLeft() % 40 == 0) {
 					monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() - speed_y);
 					direction = 1;
+					monster1.Animation(3);
 				}
 				else if (upstair[0] != -1 || upstair[1] != -1) {
 					if (upstair[0] != -1 && upstair[1] != -1) {
 						if (character.GetLeft() > monster1.GetLeft()) {
 							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 							direction = 4;
+							monster1.Animation(1);
 						}
 						else {
 							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 							direction = 3;
+							monster1.Animation(2);
 						}
 					}
 					else if (upstair[0] != -1) {
 						monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 						direction = 3;
+						monster1.Animation(2);
 					}
 					else {
 						monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 						direction = 4;
+						monster1.Animation(1);
 					}
 				}
 				else {
 					if (map[monster1.GetTop() / 44 + 1][x] == 2 && monster1.GetLeft() % 40 == 0) {
 						monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() + speed_y);
 						direction = 2;
+						monster1.Animation(3);
 					}
 					else if (downstair[0] != -1 || downstair[1] != -1) {
 						if (downstair[0] != -1 && downstair[1] != -1) {
 							if (character.GetLeft() > monster1.GetLeft()) {
 								monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 								direction = 4;
+								monster1.Animation(1);
 							}
 							else {
 								monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 								direction = 3;
+								monster1.Animation(2);
 							}
 						}
 						else if (downstair[0] != -1) {
 							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 							direction = 3;
+							monster1.Animation(2);
 						}
 						else {
 							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 							direction = 4;
+							monster1.Animation(1);
 						}
 					}
 				}
@@ -128,50 +197,60 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 				if (map[monster1.GetTop() / 44 + 1][x] == 2 && monster1.GetLeft() % 40 == 0) {
 					monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() + speed_y);
 					direction = 2;
+					monster1.Animation(3);
 				}
 				else if (downstair[0] != -1 || downstair[1] != -1) {
 					if (downstair[0] != -1 && downstair[1] != -1) {
 						if (character.GetLeft() > monster1.GetLeft()) {
 							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 							direction = 4;
+							monster1.Animation(1);
 						}
 						else {
 							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 							direction = 3;
+							monster1.Animation(2);
 						}
 					}
 					else if (downstair[0] != -1) {
 						monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 						direction = 3;
+						monster1.Animation(2);
 					}
 					else {
 						monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 						direction = 4;
+						monster1.Animation(1);
 					}
 				}
 				else {
 					if (map[monster1.GetTop() / 44][x] == 2 && monster1.GetLeft() % 40 == 0) {
 						monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() - speed_y);
 						direction = 1;
+						monster1.Animation(3);
 					}
 					else if (upstair[0] != -1 || upstair[1] != -1) {
 						if (upstair[0] != -1 && upstair[1] != -1) {
 							if (character.GetLeft() > monster1.GetLeft()) {
 								monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 								direction = 4;
+								monster1.Animation(1);
 							}
 							else {
 								monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 								direction = 3;
+								monster1.Animation(2);
 							}
 						}
 						else if (upstair[0] != -1) {
 							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
 							direction = 3;
+							monster1.Animation(2);
 						}
 						else {
 							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
 							direction = 4;
+							monster1.Animation(1);
 						}
 					}
 				}
@@ -180,9 +259,11 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		else if(character.GetTop() % 44 == 0){
 			if (monster1.GetLeft() > character.GetLeft()) {
 				monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
+				monster1.Animation(2);
 			}
 			else if (monster1.GetLeft() < character.GetLeft()) {
 				monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
+				monster1.Animation(1);
 			}
 			else {
 				monster1.SetTopLeft(12 * 40, 44 * 3);
@@ -199,9 +280,12 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		if (monster1.GetTop() % 44 != 0 && (direction == 1 || direction == 2)) {
 			if (direction == 1) {
 				monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() - speed_y);
+				monster1.Animation(3);
 			}
 			else if (direction == 2) {
 				monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() + speed_y);
+				monster1.Animation(3);
+
 			}
 		}
 		else if((character.GetTop() >= monster1.GetTop()) && (direction == 3 || direction == 4)){
@@ -215,9 +299,11 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			}
 			else if (direction == 3) {
 				monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
+				monster1.Animation(2);
 			}
 			else if (direction == 4) {
 				monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
+				monster1.Animation(1);
 			}
 		}
 		else if ((character.GetTop() < monster1.GetTop()) && (direction == 3 || direction == 4)) {
@@ -231,9 +317,11 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			}
 			else if (direction == 3) {
 				monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
+				monster1.Animation(2);
 			}
 			else if (direction == 4) {
 				monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
+				monster1.Animation(1);
 			}
 		}
 		else {
@@ -244,7 +332,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
-
+	int count = 0;
 	ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 
 
@@ -271,7 +359,8 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/rope.bmp" });
 				break;
 			case 4:
-				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/gold.bmp" });
+				count++;
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/gold.bmp", "resources/black.bmp" });
 				break;
 			case 5:
 				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/block.bmp" });
@@ -282,6 +371,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 			stage[stageid - 1][i][j].SetTopLeft(j * 40, i * 44);
 		}
 	}
+	gold = count;
 	for (int i = 0; i < 28; i++) {
 		stage[stageid - 1][16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
 		stage[stageid - 1][16][i].SetTopLeft(i * 40, 16 * 44);
@@ -289,29 +379,25 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 	}
 	character.LoadBitmapByString({
-								"resources/character/redhat_01.bmp",
-								"resources/character/redhat_02.bmp",
-								"resources/character/redhat_03.bmp",
-								"resources/character/redhat_04.bmp",
-								"resources/character/redhat_05.bmp",
-								"resources/character/redhat_06.bmp",
-								"resources/character/redhat_07.bmp",
-								"resources/character/redhat_08.bmp",
-								"resources/character/redhat_09.bmp",
-								"resources/character/redhat_10.bmp",
-								"resources/character/redhat_11.bmp",
-								"resources/character/redhat_12.bmp",
-								"resources/character/redhat_13.bmp",
-								"resources/character/redhat_14.bmp",
-								"resources/character/redhat_15.bmp",
-								"resources/character/redhat_16.bmp",
-								"resources/character/redhat_17.bmp",
-								"resources/character/redhat_18.bmp",
-								"resources/character/redhat_19.bmp",
-								"resources/character/redhat_20.bmp",
-								"resources/character/redhat_21.bmp",
-								"resources/character/redhat_22.bmp"   
-		}, RGB(255, 255, 255));
+								"resources/character_new/runner_01.bmp",
+								"resources/character_new/runner_02.bmp",
+								"resources/character_new/runner_03.bmp",
+								"resources/character_new/runner_04.bmp",
+								"resources/character_new/runner_05.bmp",
+								"resources/character_new/runner_06.bmp",
+								"resources/character_new/runner_07.bmp",
+								"resources/character_new/runner_08.bmp",
+								"resources/character_new/runner_09.bmp",
+								"resources/character_new/runner_10.bmp",
+								"resources/character_new/runner_11.bmp",
+								"resources/character_new/runner_12.bmp",
+								"resources/character_new/runner_13.bmp",
+								"resources/character_new/runner_14.bmp",
+								"resources/character_new/runner_15.bmp",
+								"resources/character_new/runner_16.bmp",
+								"resources/character_new/runner_17.bmp",
+								"resources/character_new/runner_18.bmp",
+		}, RGB(0, 0, 0));
 	character.SetTopLeft(40, 44 * 14);
 	monster1.LoadBitmapByString({ 
 									 "resources/monster1/01.bmp",
@@ -320,6 +406,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 									 "resources/monster1/04.bmp",
 									 "resources/monster1/05.bmp",
 									 "resources/monster1/06.bmp",
+									 "resources/monster1/07.bmp",
 									 "resources/monster1/08.bmp",
 									 "resources/monster1/09.bmp",
 									 "resources/monster1/10.bmp",
@@ -344,6 +431,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 									 "resources/monster1/04.bmp",
 									 "resources/monster1/05.bmp",
 									 "resources/monster1/06.bmp",
+									 "resources/monster1/07.bmp",
 									 "resources/monster1/08.bmp",
 									 "resources/monster1/09.bmp",
 									 "resources/monster1/10.bmp",
@@ -368,6 +456,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 									 "resources/monster1/04.bmp",
 									 "resources/monster1/05.bmp",
 									 "resources/monster1/06.bmp",
+									 "resources/monster1/07.bmp",
 									 "resources/monster1/08.bmp",
 									 "resources/monster1/09.bmp",
 									 "resources/monster1/10.bmp",
@@ -388,60 +477,80 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-	if (nChar == VK_LEFT || nChar == 0x41) {
+{	
+	if (character.GetPos() == 0) {
 		character.StopAnimation();
-		int x = character.GetLeft();
-		int y = character.GetTop() + character.GetHeight() / 2;
-		if (map[y / 44][x / 40] == 3) {
+		character.C_Animation(1);
+	}
+	else if (nChar == VK_LEFT || nChar == 0x41) {
+		int x = character.GetLeft() - speed_x;
+		int y = character.GetTop();
+		if (character.GetPos() == 0) {
+			character.StopAnimation();
+			character.C_Animation(2);
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
-			character.Animation(6);
+		}
+		else if (map[y / 44][x / 40] == 3) {
+			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
+			character.C_Animation(6);
+		}
+		else if (map[y / 44 + 1][(x + speed_x) / 40] == 1 && map[y / 44][x / 40] == 1 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			character.C_Animation(8);
 		}
 		else if (map[y / 44][x / 40] != 0) {
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
-			character.Animation(2);
+			character.C_Animation(2);
 		}
 	}
 	else if (nChar == VK_DOWN || nChar == 0x53)
 	{
-		character.StopAnimation();
 		int x = character.GetLeft() + character.GetWidth() / 2;
 		int y = character.GetTop() + character.GetHeight();
 		if (map[y / 44][x / 40] == 2) {
 			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			character.Animation(3);
+			character.C_Animation(3);
+		}
+		else if (map[(y - character.GetHeight()) / 44 + 1][(x - character.GetWidth() / 2) / 40] == 1) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			character.C_Animation(8);
+			//不在正中間待修
 		}
 	}
 	else if (nChar == VK_RIGHT || nChar == 0x44) {
-		character.StopAnimation();
 		int x = character.GetLeft() + character.GetWidth();
-		int y = character.GetTop() + character.GetHeight() / 2;
+		int y = character.GetTop();
 		if (map[y / 44][x / 40] == 3) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
-			character.Animation(5);
+			character.C_Animation(5);
+		}
+		else if (map[y / 44 + 1][(x - character.GetWidth() + speed_x) / 40] == 1 && map[y / 44][(x - character.GetWidth() + speed_x) / 40] == 1 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() + speed_y);
+			character.C_Animation(8);
 		}
 		else if (map[y / 44][x / 40] != 0) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
-			character.Animation(1);
+			character.C_Animation(1);
 		}
 	}
 	else if (nChar == VK_UP || nChar == 0x57)
 	{
-		character.StopAnimation();
 		int x = character.GetLeft();
 		int y = character.GetTop() + character.GetHeight() - 1;
 		if (map[y / 44][x / 40] == 2)
 		{
 			character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
-			character.Animation(3);
+			character.C_Animation(3);
 		}
 	}
 	else if (nChar == VK_SPACE)
 	{
+		gold = -1;
+		int count = 0;
 		stageid++;
 		ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 
-
+		
 		for (int i = 0; i < 16; i++) {
 			for (int j = 0; j < 28; j++) {
 				ifs >> map[i][j];
@@ -462,10 +571,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/ladder.bmp" });
 					break;
 				case 3:
-					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/rope.bmp" });
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/rope.bmp"  });
 					break;
 				case 4:
-					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/gold.bmp" });
+					count++;
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/gold.bmp", "resources/black.bmp" });
 					break;
 				case 5:
 					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/block.bmp" });
@@ -482,6 +592,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
 			stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 		}
+		gold = count;
 	}
 }
 
@@ -519,7 +630,7 @@ void CGameStateRun::OnShow()
 		}
 	}
 	character.ShowBitmap();
-	character.Animation(0);
+	character.C_Animation(0);
 
 	monster1.ShowBitmap();
 	monster1.Animation(0);
