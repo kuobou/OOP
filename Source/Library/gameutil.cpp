@@ -698,5 +698,260 @@ namespace game_framework {
 			return false;
 		}
 	}
+	void CMovingBitmap::SetCharacter(char set[18][28]) {
+		for (int i = 0; i < 18; i++) {
+			for (int j = 0; j < 28; j++) {
+				if (set[i][j] == '?') {
+					SetTopLeft(j * 40, i * 44);
+				}
+			}
+		}
+	}
+	int CMovingBitmap::GetDirection() {
+		return direction;
+	}
+	void CMovingBitmap::EnemyMove(CMovingBitmap character, int map[18][28]) {
+		int left, right, x;
+		if (direction == 0) {
+			downstair[0] = -1;
+			downstair[1] = -1;
+			upstair[0] = -1;
+			upstair[1] = -1;
+			if (GetTop() != character.GetTop() && character.GetTop() % 44 == 0) {
+				x = GetLeft() / 40;
+				left = x - 1;
+				right = x + 1;
+				while (GetLeft() > 0 && left >= 0) {
+					if (map[GetTop() / 44][left] == 3 || map[GetTop() / 44 + 1][left] != 1) {
+						if (map[GetTop() / 44][left] == 2) {
+							upstair[0] = left;
+						}
+						if (map[GetTop() / 44 + 1][left] == 2) {
+							downstair[0] = left;
+						}
+						left--;
+					}
+					else {
+						break;
+					}
+				}
+				while (GetLeft() <= 27 * 40 && right < 28) {
+					if (map[GetTop() / 44][right] == 3 || map[GetTop() / 44 + 1][right] != 1) {
+						if (map[GetTop() / 44][right] == 2) {
+							upstair[1] = right;
+						}
+						if (map[GetTop() / 44 + 1][right] == 2) {
+							downstair[1] = right;
+						}
+						right++;
+					}
+					else {
+						break;
+					}
+				}
+				if (GetTop() > character.GetTop()) {
+					if (map[GetTop() / 44][x] == 2) {
+						upstair[0] = x;
+					}
+					if (map[GetTop() / 44][x] == 2 && GetLeft() % 40 == 0) {
+						SetTopLeft(GetLeft(),GetTop() - speed_y);
+						direction = 1;
+						Animation(3);
+					}
+					else if (upstair[0] != -1 || upstair[1] != -1) {
+						if (upstair[0] != -1 && upstair[1] != -1) {
+							if (character.GetLeft() > GetLeft()) {
+								SetTopLeft(GetLeft() + speed_x, GetTop());
+								direction = 4;
+								Animation(1);
+							}
+							else {
+								SetTopLeft(GetLeft() - speed_x, GetTop());
+								direction = 3;
+								Animation(2);
+							}
+						}
+						else if (upstair[0] != -1) {
+							SetTopLeft(GetLeft() - speed_x, GetTop());
+							direction = 3;
+							Animation(2);
+						}
+						else {
+							SetTopLeft(GetLeft() + speed_x, GetTop());
+							direction = 4;
+							Animation(1);
+						}
+					}
+					else {
+						if (map[GetTop() / 44 + 1][x] == 2 && GetLeft() % 40 == 0) {
+							SetTopLeft(GetLeft(), GetTop() + speed_y);
+							direction = 2;
+							Animation(3);
+						}
+						else if (downstair[0] != -1 || downstair[1] != -1) {
+							if (downstair[0] != -1 && downstair[1] != -1) {
+								if (character.GetLeft() > GetLeft()) {
+									SetTopLeft(GetLeft() + speed_x, GetTop());
+									direction = 4;
+									Animation(1);
+								}
+								else {
+									SetTopLeft(GetLeft() - speed_x, GetTop());
+									direction = 3;
+									Animation(2);
+								}
+							}
+							else if (downstair[0] != -1) {
+								SetTopLeft(GetLeft() - speed_x, GetTop());
+								direction = 3;
+								Animation(2);
+							}
+							else {
+								SetTopLeft(GetLeft() + speed_x, GetTop());
+								direction = 4;
+								Animation(1);
+							}
+						}
+					}
+				}
+				else {
+					if (map[GetTop() / 44 + 1][x] == 2) {
+						downstair[0] = x;
+					}
+					if (map[GetTop() / 44 + 1][x] == 2 && GetLeft() % 40 == 0) {
+						SetTopLeft(GetLeft(), GetTop() + speed_y);
+						direction = 2;
+						Animation(3);
+					}
+					else if (downstair[0] != -1 || downstair[1] != -1) {
+						if (downstair[0] != -1 && downstair[1] != -1) {
+							if (character.GetLeft() > GetLeft()) {
+								SetTopLeft(GetLeft() + speed_x, GetTop());
+								direction = 4;
+								Animation(1);
+							}
+							else {
+								SetTopLeft(GetLeft() - speed_x, GetTop());
+								direction = 3;
+								Animation(2);
+							}
+						}
+						else if (downstair[0] != -1) {
+							SetTopLeft(GetLeft() - speed_x, GetTop());
+							direction = 3;
+							Animation(2);
+						}
+						else {
+							SetTopLeft(GetLeft() + speed_x, GetTop());
+							direction = 4;
+							Animation(1);
+						}
+					}
+					else {
+						if (map[GetTop() / 44][x] == 2 && GetLeft() % 40 == 0) {
+							SetTopLeft(GetLeft(), GetTop() - speed_y);
+							direction = 1;
+							Animation(3);
+						}
+						else if (upstair[0] != -1 || upstair[1] != -1) {
+							if (upstair[0] != -1 && upstair[1] != -1) {
+								if (character.GetLeft() > GetLeft()) {
+									SetTopLeft(GetLeft() + speed_x, GetTop());
+									direction = 4;
+									Animation(1);
+								}
+								else {
+									SetTopLeft(GetLeft() - speed_x, GetTop());
+									direction = 3;
+									Animation(2);
+								}
+							}
+							else if (upstair[0] != -1) {
+								SetTopLeft(GetLeft() - speed_x, GetTop());
+								direction = 3;
+								Animation(2);
+							}
+							else {
+								SetTopLeft(GetLeft() + speed_x, GetTop());
+								direction = 4;
+								Animation(1);
+							}
+						}
+					}
+				}
+			}
+			else if (character.GetTop() % 44 == 0) {
+				if (GetLeft() > character.GetLeft()) {
+					SetTopLeft(GetLeft() - speed_x, GetTop());
+					Animation(2);
+				}
+				else if (GetLeft() < character.GetLeft()) {
+					SetTopLeft(GetLeft() + speed_x, GetTop());
+					Animation(1);
+				}
+				else {
+					SetTopLeft(12 * 40, 44 * 3);
+					direction = 0;
+				}
+			}
+			else {
+				SetTopLeft(12 * 40, 44 * 3);
+				direction = 0;
+				//角色在梯子怪物的移動模式待寫
+			}
+		}
+		else {
+			if (GetTop() % 44 != 0 && (direction == 1 || direction == 2)) {
+				if (direction == 1) {
+					SetTopLeft(GetLeft(), GetTop() - speed_y);
+					Animation(3);
+				}
+				else if (direction == 2) {
+					SetTopLeft(GetLeft(), GetTop() + speed_y);
+					Animation(3);
+
+				}
+			}
+			else if ((character.GetTop() >= GetTop()) && (direction == 3 || direction == 4)) {
+				if (map[GetTop() / 44 + 1][GetLeft() / 40] == 2 && GetLeft() % 40 == 0) {
+					direction = 0;
+				}
+				else if (downstair[0] == -1 && downstair[1] == -1) {
+					if (map[GetTop() / 44][GetLeft() / 40] == 2 && GetLeft() % 40 == 0) {
+						direction = 0;
+					}
+				}
+				else if (direction == 3) {
+					SetTopLeft(GetLeft() - speed_x, GetTop());
+					Animation(2);
+				}
+				else if (direction == 4) {
+					SetTopLeft(GetLeft() + speed_x, GetTop());
+					Animation(1);
+				}
+			}
+			else if ((character.GetTop() < GetTop()) && (direction == 3 || direction == 4)) {
+				if (map[GetTop() / 44][GetLeft() / 40] == 2 && GetLeft() % 40 == 0) {
+					direction = 0;
+				}
+				else if (upstair[0] == -1 && upstair[1] == -1) {
+					if (map[GetTop() / 44 + 1][GetLeft() / 40] == 2 && GetLeft() % 40 == 0) {
+						direction = 0;
+					}
+				}
+				else if (direction == 3) {
+					SetTopLeft(GetLeft() - speed_x, GetTop());
+					Animation(2);
+				}
+				else if (direction == 4) {
+					SetTopLeft(GetLeft() + speed_x, GetTop());
+					Animation(1);
+				}
+			}
+			else {
+				direction = 0;
+			}
+		}
+	}
 }         
 

@@ -95,9 +95,7 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap stage[150][18][28];
 		CMovingBitmap character;
-		CMovingBitmap monster1;
-		CMovingBitmap monster2;
-		CMovingBitmap monster3;
+		CMovingBitmap monster[10];
 		//int num[10] = {0};								// 0是character 1是monster1  2是monster2 依此類推
 		int speed_x = 10;
 		int speed_y = 11;
@@ -120,11 +118,13 @@ namespace game_framework {
 		};
 		int stageid = 1;
 		int map[18][28] = {0};
+		char set[18][28] = {'0'};
 		int direction = 0;
 		int test = -100;
 		int downstair[2] = { -1, -1 };
 		int upstair[2] = { -1, -1 };
 		int gold = -1;
+		int CountEnemy = 0;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -28,11 +28,12 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
-	test = gold;
 	if (gold == 0) {
 		gold = 0;
+		CountEnemy = 0;
 		stageid++;
-		ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
+		ifstream ifs;
+		ifs.open("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 
 
 		for (int i = 0; i < 16; i++) {
@@ -76,6 +77,25 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
 			stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 		}
+		ifs.open("map_set/Stage" + to_string(stageid) + "_set.txt");
+
+
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 28; j++) {
+				ifs >> set[i][j];
+			}
+		}
+
+		ifs.close();
+		character.SetCharacter(set);
+		for (int i = 0; i < 18; i++) {
+			for (int j = 0; j < 28; j++) {
+				if (set[i][j] == 'M') {
+					monster[CountEnemy].SetTopLeft(j * 40, i * 44);
+					CountEnemy++;
+				}
+			}
+		}
 	}
 	if (character.GetPos() == 8) {
 		if (!character.IsGround(map)) {
@@ -87,253 +107,16 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		stage[stageid - 1][character.GetTop() / 44][character.GetLeft() / 40].SetFrameIndexOfBitmap(1);
 		gold--;
 	}
-	if (direction == 0) {
-		int left, right, x;
-		downstair[0] = -1;
-		downstair[1] = -1;
-		upstair[0] = -1;
-		upstair[1] = -1;	
-		if (monster1.GetTop() != character.GetTop() && character.GetTop() % 44 == 0) {
-			x = monster1.GetLeft() / 40;
-			left = x - 1;
-			right = x + 1;
-			while (monster1.GetLeft() > 0 && left >= 0) {
-				if (map[monster1.GetTop() / 44][left] == 3 || map[monster1.GetTop() / 44 + 1][left] != 1) {
-					if (map[monster1.GetTop() / 44][left] == 2) {
-						upstair[0] = left;
-					}
-					if (map[monster1.GetTop() / 44 + 1][left] == 2) {
-						downstair[0] = left;
-					}
-					left--;
-				}
-				else {
-					break;
-				}
-			}
-			while (monster1.GetLeft() <= 27 * 40 && right < 28) {
-				if (map[monster1.GetTop() / 44][right] == 3 || map[monster1.GetTop() / 44 + 1][right] != 1) {
-					if (map[monster1.GetTop() / 44][right] == 2) {
-						upstair[1] = right;
-					}
-					if (map[monster1.GetTop() / 44 + 1][right] == 2) {
-						downstair[1] = right;
-					}
-					right++;
-				}
-				else {
-					break;
-				}
-			}
-			if (monster1.GetTop() > character.GetTop()) {
-				if (map[monster1.GetTop() / 44][x] == 2) {
-					upstair[0] = x;
-				}
-				if (map[monster1.GetTop() / 44][x] == 2 && monster1.GetLeft() % 40 == 0) {
-					monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() - speed_y);
-					direction = 1;
-					monster1.Animation(3);
-				}
-				else if (upstair[0] != -1 || upstair[1] != -1) {
-					if (upstair[0] != -1 && upstair[1] != -1) {
-						if (character.GetLeft() > monster1.GetLeft()) {
-							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-							direction = 4;
-							monster1.Animation(1);
-						}
-						else {
-							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-							direction = 3;
-							monster1.Animation(2);
-						}
-					}
-					else if (upstair[0] != -1) {
-						monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-						direction = 3;
-						monster1.Animation(2);
-					}
-					else {
-						monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-						direction = 4;
-						monster1.Animation(1);
-					}
-				}
-				else {
-					if (map[monster1.GetTop() / 44 + 1][x] == 2 && monster1.GetLeft() % 40 == 0) {
-						monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() + speed_y);
-						direction = 2;
-						monster1.Animation(3);
-					}
-					else if (downstair[0] != -1 || downstair[1] != -1) {
-						if (downstair[0] != -1 && downstair[1] != -1) {
-							if (character.GetLeft() > monster1.GetLeft()) {
-								monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-								direction = 4;
-								monster1.Animation(1);
-							}
-							else {
-								monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-								direction = 3;
-								monster1.Animation(2);
-							}
-						}
-						else if (downstair[0] != -1) {
-							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-							direction = 3;
-							monster1.Animation(2);
-						}
-						else {
-							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-							direction = 4;
-							monster1.Animation(1);
-						}
-					}
-				}
-			}
-			else {
-				if (map[monster1.GetTop() / 44 + 1][x] == 2) {
-					downstair[0] = x;
-				}
-				if (map[monster1.GetTop() / 44 + 1][x] == 2 && monster1.GetLeft() % 40 == 0) {
-					monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() + speed_y);
-					direction = 2;
-					monster1.Animation(3);
-				}
-				else if (downstair[0] != -1 || downstair[1] != -1) {
-					if (downstair[0] != -1 && downstair[1] != -1) {
-						if (character.GetLeft() > monster1.GetLeft()) {
-							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-							direction = 4;
-							monster1.Animation(1);
-						}
-						else {
-							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-							direction = 3;
-							monster1.Animation(2);
-						}
-					}
-					else if (downstair[0] != -1) {
-						monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-						direction = 3;
-						monster1.Animation(2);
-					}
-					else {
-						monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-						direction = 4;
-						monster1.Animation(1);
-					}
-				}
-				else {
-					if (map[monster1.GetTop() / 44][x] == 2 && monster1.GetLeft() % 40 == 0) {
-						monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() - speed_y);
-						direction = 1;
-						monster1.Animation(3);
-					}
-					else if (upstair[0] != -1 || upstair[1] != -1) {
-						if (upstair[0] != -1 && upstair[1] != -1) {
-							if (character.GetLeft() > monster1.GetLeft()) {
-								monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-								direction = 4;
-								monster1.Animation(1);
-							}
-							else {
-								monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-								direction = 3;
-								monster1.Animation(2);
-							}
-						}
-						else if (upstair[0] != -1) {
-							monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-							direction = 3;
-							monster1.Animation(2);
-						}
-						else {
-							monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-							direction = 4;
-							monster1.Animation(1);
-						}
-					}
-				}
-			}
-		}
-		else if(character.GetTop() % 44 == 0){
-			if (monster1.GetLeft() > character.GetLeft()) {
-				monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-				monster1.Animation(2);
-			}
-			else if (monster1.GetLeft() < character.GetLeft()) {
-				monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-				monster1.Animation(1);
-			}
-			else {
-				monster1.SetTopLeft(12 * 40, 44 * 3);
-				direction = 0;
-			}
-		}
-		else {
-			monster1.SetTopLeft(12 * 40, 44 * 3);
-			direction = 0;
-			//角色在梯子怪物的移動模式待寫
-		}
-	}
-	else {
-		if (monster1.GetTop() % 44 != 0 && (direction == 1 || direction == 2)) {
-			if (direction == 1) {
-				monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() - speed_y);
-				monster1.Animation(3);
-			}
-			else if (direction == 2) {
-				monster1.SetTopLeft(monster1.GetLeft(), monster1.GetTop() + speed_y);
-				monster1.Animation(3);
-
-			}
-		}
-		else if((character.GetTop() >= monster1.GetTop()) && (direction == 3 || direction == 4)){
-			if (map[monster1.GetTop() / 44 + 1][monster1.GetLeft() / 40] == 2 && monster1.GetLeft() % 40 == 0) {
-				direction = 0;
-			}
-			else if (downstair[0] == -1 && downstair[1] == -1) {
-				if (map[monster1.GetTop() / 44][monster1.GetLeft() / 40] == 2 && monster1.GetLeft() % 40 == 0) {
-					direction = 0;
-				}
-			}
-			else if (direction == 3) {
-				monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-				monster1.Animation(2);
-			}
-			else if (direction == 4) {
-				monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-				monster1.Animation(1);
-			}
-		}
-		else if ((character.GetTop() < monster1.GetTop()) && (direction == 3 || direction == 4)) {
-			if (map[monster1.GetTop() / 44][monster1.GetLeft() / 40] == 2 && monster1.GetLeft() % 40 == 0) {
-				direction = 0;
-			}
-			else if (upstair[0] == -1 && upstair[1] == -1) {
-				if (map[monster1.GetTop() / 44 + 1][monster1.GetLeft() / 40] == 2 && monster1.GetLeft() % 40 == 0) {
-					direction = 0;
-				}
-			}
-			else if (direction == 3) {
-				monster1.SetTopLeft(monster1.GetLeft() - speed_x, monster1.GetTop());
-				monster1.Animation(2);
-			}
-			else if (direction == 4) {
-				monster1.SetTopLeft(monster1.GetLeft() + speed_x, monster1.GetTop());
-				monster1.Animation(1);
-			}
-		}
-		else {
-			direction = 0;
-		}
+	for (int i = 0; i < CountEnemy; i++) {
+		monster[i].EnemyMove(character, map);
 	}
 }
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
 	int count = 0;
-	ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
+	ifstream ifs;
+	ifs.open("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 
 
 	for (int i = 0; i < 16; i++) {
@@ -378,6 +161,15 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
 		stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 	}
+	ifs.open("map_set/Stage" + to_string(stageid) + "_set.txt");
+
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 28; j++) {
+			ifs >> set[i][j];
+		}
+	}
+
+	ifs.close();
 	character.LoadBitmapByString({
 								"resources/character_new/runner_01.bmp",
 								"resources/character_new/runner_02.bmp",
@@ -398,82 +190,41 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 								"resources/character_new/runner_17.bmp",
 								"resources/character_new/runner_18.bmp",
 		}, RGB(0, 0, 0));
-	character.SetTopLeft(40, 44 * 14);
-	monster1.LoadBitmapByString({ 
-									 "resources/monster1/01.bmp",
-									 "resources/monster1/02.bmp",
-									 "resources/monster1/03.bmp",
-									 "resources/monster1/04.bmp",
-									 "resources/monster1/05.bmp",
-									 "resources/monster1/06.bmp",
-									 "resources/monster1/07.bmp",
-									 "resources/monster1/08.bmp",
-									 "resources/monster1/09.bmp",
-									 "resources/monster1/10.bmp",
-									 "resources/monster1/11.bmp",
-									 "resources/monster1/12.bmp",
-									 "resources/monster1/13.bmp",
-									 "resources/monster1/14.bmp",
-									 "resources/monster1/15.bmp",
-									 "resources/monster1/16.bmp",
-									 "resources/monster1/17.bmp",
-									 "resources/monster1/18.bmp",
-									 "resources/monster1/19.bmp",
-									 "resources/monster1/20.bmp",
-									 "resources/monster1/21.bmp",
-									 "resources/monster1/22.bmp"
-		}, RGB(0, 0, 0));
-	monster1.SetTopLeft(120, 44 * 9);
-	monster2.LoadBitmapByString({
-									 "resources/monster1/01.bmp",
-									 "resources/monster1/02.bmp",
-									 "resources/monster1/03.bmp",
-									 "resources/monster1/04.bmp",
-									 "resources/monster1/05.bmp",
-									 "resources/monster1/06.bmp",
-									 "resources/monster1/07.bmp",
-									 "resources/monster1/08.bmp",
-									 "resources/monster1/09.bmp",
-									 "resources/monster1/10.bmp",
-									 "resources/monster1/11.bmp",
-									 "resources/monster1/12.bmp",
-									 "resources/monster1/13.bmp",
-									 "resources/monster1/14.bmp",
-									 "resources/monster1/15.bmp",
-									 "resources/monster1/16.bmp",
-									 "resources/monster1/17.bmp",
-									 "resources/monster1/18.bmp",
-									 "resources/monster1/19.bmp",
-									 "resources/monster1/20.bmp",
-									 "resources/monster1/21.bmp",
-									 "resources/monster1/22.bmp"
-		}, RGB(0, 0, 0));
-	monster2.SetTopLeft(160, 44 * 9);
-	monster3.LoadBitmapByString({
-									 "resources/monster1/01.bmp",
-									 "resources/monster1/02.bmp",
-									 "resources/monster1/03.bmp",
-									 "resources/monster1/04.bmp",
-									 "resources/monster1/05.bmp",
-									 "resources/monster1/06.bmp",
-									 "resources/monster1/07.bmp",
-									 "resources/monster1/08.bmp",
-									 "resources/monster1/09.bmp",
-									 "resources/monster1/10.bmp",
-									 "resources/monster1/11.bmp",
-									 "resources/monster1/12.bmp",
-									 "resources/monster1/13.bmp",
-									 "resources/monster1/14.bmp",
-									 "resources/monster1/15.bmp",
-									 "resources/monster1/16.bmp",
-									 "resources/monster1/17.bmp",
-									 "resources/monster1/18.bmp",
-									 "resources/monster1/19.bmp",
-									 "resources/monster1/20.bmp",
-									 "resources/monster1/21.bmp",
-									 "resources/monster1/22.bmp"
-		}, RGB(0, 0, 0));
-	monster3.SetTopLeft(200, 44 * 9);
+	character.SetCharacter(set);
+	for (int i = 0; i < 10; i++) {
+		monster[i].LoadBitmapByString({
+									 "resources/monster/01.bmp",
+									 "resources/monster/02.bmp",
+									 "resources/monster/03.bmp",
+									 "resources/monster/04.bmp",
+									 "resources/monster/05.bmp",
+									 "resources/monster/06.bmp",
+									 "resources/monster/07.bmp",
+									 "resources/monster/08.bmp",
+									 "resources/monster/09.bmp",
+									 "resources/monster/10.bmp",
+									 "resources/monster/11.bmp",
+									 "resources/monster/12.bmp",
+									 "resources/monster/13.bmp",
+									 "resources/monster/14.bmp",
+									 "resources/monster/15.bmp",
+									 "resources/monster/16.bmp",
+									 "resources/monster/17.bmp",
+									 "resources/monster/18.bmp",
+									 "resources/monster/19.bmp",
+									 "resources/monster/20.bmp",
+									 "resources/monster/21.bmp",
+									 "resources/monster/22.bmp"
+			}, RGB(0, 0, 0));
+	}
+	for (int i = 0; i < 18; i++) {
+		for (int j = 0; j < 28; j++) {
+			if (set[i][j] == 'M') {
+				monster[CountEnemy].SetTopLeft(j * 40, i * 44);
+				CountEnemy++;
+			}
+		}
+	}
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -547,9 +298,10 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		gold = -1;
 		int count = 0;
+		CountEnemy = 0;
 		stageid++;
-		ifstream ifs("map_entity/Stage" + to_string(stageid) + "_entity.txt");
-
+		ifstream ifs;
+		ifs.open("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 		
 		for (int i = 0; i < 16; i++) {
 			for (int j = 0; j < 28; j++) {
@@ -593,6 +345,26 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 		}
 		gold = count;
+
+		ifs.open("map_set/Stage" + to_string(stageid) + "_set.txt");
+
+
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 28; j++) {
+				ifs >> set[i][j];
+			}
+		}
+
+		ifs.close();
+		character.SetCharacter(set);
+		for (int i = 0; i < 18; i++) {
+			for (int j = 0; j < 28; j++) {
+				if (set[i][j] == 'M') {
+					monster[CountEnemy].SetTopLeft(j * 40, i * 44);
+					CountEnemy++;
+				}
+			}
+		}
 	}
 }
 
@@ -632,12 +404,12 @@ void CGameStateRun::OnShow()
 	character.ShowBitmap();
 	character.C_Animation(0);
 
-	monster1.ShowBitmap();
-	monster1.Animation(0);
-	monster2.ShowBitmap();
-	monster2.Animation(0);
-	monster3.ShowBitmap();
-	monster3.Animation(0);
+	monster[0].ShowBitmap();
+	monster[0].Animation(0);
+	monster[1].ShowBitmap();
+	monster[1].Animation(0);
+	monster[2].ShowBitmap();
+	monster[2].Animation(0);
 	CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
 	CDDraw::ReleaseBackCDC();

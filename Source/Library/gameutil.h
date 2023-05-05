@@ -128,6 +128,9 @@ namespace game_framework {
 		void CMovingBitmap::StopAnimation();
 		bool CMovingBitmap::IsGround(int map[18][28]);
 		bool CMovingBitmap::IsGold(int map[18][28]);
+		void CMovingBitmap::SetCharacter(char set[18][28]);
+		void CMovingBitmap::EnemyMove(CMovingBitmap character, int map[18][28]);
+		int CMovingBitmap::GetDirection();
 	protected:
 		//! 當前幀的索引值。
 		int frameIndex = 0;
@@ -153,6 +156,11 @@ namespace game_framework {
 
 		int pos = 0;
 		bool stopanimate = false;
+		int direction = 0;
+		int downstair[2];
+		int upstair[2];
+		int speed_x = 10;
+		int speed_y = 11;
 	private:
 		void InitializeRectByBITMAP(BITMAP bitmap);
 		void ShowBitmapBySetting();
