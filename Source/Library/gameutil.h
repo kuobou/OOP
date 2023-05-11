@@ -122,15 +122,20 @@ namespace game_framework {
 		/* Toggle function */
 		void  ToggleAnimation();
 
-		void CMovingBitmap::Animation(int num);
-		void CMovingBitmap::C_Animation(int num);
+		void Animation(int num);
+		void C_Animation(int num);
 		int  GetPos();
-		void CMovingBitmap::StopAnimation();
-		bool CMovingBitmap::IsGround(int map[18][28]);
-		bool CMovingBitmap::IsGold(int map[18][28]);
-		void CMovingBitmap::SetCharacter(char set[18][28]);
-		void CMovingBitmap::EnemyMove(CMovingBitmap character, int map[18][28]);
-		int CMovingBitmap::GetDirection();
+		void StopAnimation();
+		bool IsGround(int map[18][28]);
+		bool IsGold(int map[18][28]);
+		void SetCharacter(char set[18][28]);
+		void EnemyMove(CMovingBitmap character, int map[18][28]);
+		int GetDirection();
+		void DigLeft();
+		void DigRight();
+		void DigReset();
+		bool IsDig();
+		bool IsCatch();
 	protected:
 		//! 當前幀的索引值。
 		int frameIndex = 0;
@@ -161,6 +166,10 @@ namespace game_framework {
 		int upstair[2];
 		int speed_x = 10;
 		int speed_y = 11;
+		clock_t time_dig = clock();
+		clock_t recover = clock();
+		bool first = true;
+		bool catched = false;
 	private:
 		void InitializeRectByBITMAP(BITMAP bitmap);
 		void ShowBitmapBySetting();

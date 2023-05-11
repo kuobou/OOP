@@ -28,6 +28,19 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	for (int i = 0;i < 18; i++) {
+		for (int j = 0; j < 28; j++) {
+			if (stage[stageid - 1][i][j].IsDig()) {
+				stage[stageid - 1][i][j].DigReset();
+				if (stage[stageid - 1][i][j].GetFrameIndexOfBitmap() == 0) {
+					map[i][j] = 0;
+				}
+			}
+		}
+	}
+	if (monster[0].IsCatch() || monster[1].IsCatch() || monster[2].IsCatch()) {
+		finished = true;
+	}
 	if (gold == 0) {
 		gold = 0;
 		CountEnemy = 0;
@@ -47,7 +60,25 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			for (int j = 0; j < 28; j++) {
 				switch (map[i][j]) {
 				case 0:
-					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/brick.bmp" });
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/break/down/hole_00.bmp" ,
+															  "resources/break/down/hole_01.bmp" ,
+															  "resources/break/down/hole_02.bmp" ,
+															  "resources/break/down/hole_03.bmp" ,
+															  "resources/break/down/hole_04.bmp" ,
+															  "resources/break/down/hole_05.bmp" ,
+															  "resources/break/down/hole_06.bmp" ,
+															  "resources/break/down/hole_07.bmp" ,
+															  "resources/break/down/hole_08.bmp" ,
+															  "resources/break/down/hole_09.bmp" ,
+															  "resources/break/down/hole_10.bmp" ,
+															  "resources/break/down/hole_11.bmp" ,
+															  "resources/break/down/hole_12.bmp" ,
+															  "resources/break/down/hole_13.bmp" ,
+															  "resources/break/down/hole_14.bmp" ,
+															  "resources/break/down/hole_15.bmp" ,
+															  "resources/break/down/hole_16.bmp" ,
+															  "resources/break/down/hole_17.bmp" ,
+																}, RGB(255, 255, 255));
 					break;
 				case 1:
 					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/black.bmp" });
@@ -98,6 +129,95 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		}
 	}
 	if (character.GetPos() == 8) {
+		if (character.GetTop() % 44 == 0) {
+			if (map[character.GetTop() / 44 + 1][(character.GetLeft()+ speed_x) / 40] == 1) {
+				character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			}
+			else {
+				character.C_Animation(1);
+			}
+		}
+	}
+	if (digright) {
+		if (stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].GetFrameIndexOfBitmap() != 17) {
+			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].DigRight();
+		}
+		else {
+			map[character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1] = 1;
+			digright = false;
+		}
+	}
+	else if (digleft) {
+		if (stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].GetFrameIndexOfBitmap() != 8) {
+			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].DigLeft();
+		}
+		else {
+			map[character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1] = 1;
+			digleft = false;
+		}
+	}
+	else if (keyleft) {
+		int x = character.GetLeft() - speed_x;
+		int y = character.GetTop();
+		if (character.GetPos() == 0) {
+			character.StopAnimation();
+			character.C_Animation(2);
+			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
+		}
+		else if (map[y / 44][x / 40] == 3) {
+			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
+			character.C_Animation(6);
+		}
+		else if (map[y / 44 + 1][(x + speed_x) / 40] == 1 && map[y / 44][x / 40] == 1 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			character.C_Animation(8);
+		}
+		else if ((y % 44 == 0 && map[y / 44][x / 40] != 0) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44][x / 40] != 0)) && character.GetLeft() > 0) {
+			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
+			character.C_Animation(2);
+		}
+	}
+	else if (keydown)
+	{
+		int x = character.GetLeft();
+		int y = character.GetTop() + character.GetHeight();
+		if (map[y / 44][x / 40] == 2 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			character.C_Animation(3);
+		}
+		else if (map[(y - character.GetHeight()) / 44 + 1][x  / 40] == 1) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			character.C_Animation(8);
+			//不在正中間待修
+		}
+	}
+	else if (keyright) {
+		int x = character.GetLeft() + character.GetWidth();
+		int y = character.GetTop();
+		if (map[y / 44][x / 40] == 3) {
+			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
+			character.C_Animation(5);
+		}
+		else if (map[y / 44 + 1][(x - character.GetWidth() + speed_x) / 40] == 1 && map[y / 44][(x - character.GetWidth() + speed_x) / 40] == 1 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() + speed_y);
+			character.C_Animation(8);
+		}
+		else if ((y % 44 == 0 && map[y / 44][x / 40] != 0) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44][x / 40] != 0))) {
+			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
+			character.C_Animation(1);
+		}
+	}
+	else if (keyup)
+	{
+		int x = character.GetLeft();
+		int y = character.GetTop() + character.GetHeight() - 1;
+		if (map[y / 44][x / 40] == 2 && x % 40 == 0)
+		{
+			character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
+			character.C_Animation(3);
+		}
+	}
+	if (character.GetPos() == 8) {
 		if (!character.IsGround(map)) {
 			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
 		}
@@ -107,8 +227,10 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		stage[stageid - 1][character.GetTop() / 44][character.GetLeft() / 40].SetFrameIndexOfBitmap(1);
 		gold--;
 	}
-	for (int i = 0; i < CountEnemy; i++) {
-		monster[i].EnemyMove(character, map);
+	if (character.GetPos() != 0) {
+		for (int i = 0; i < CountEnemy; i++) {
+			monster[i].EnemyMove(character, map);
+		}
 	}
 }
 
@@ -130,7 +252,25 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		for (int j = 0; j < 28; j++) {
 			switch (map[i][j]) {
 			case 0:
-				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/brick.bmp" });
+				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/break/down/hole_00.bmp" ,
+															  "resources/break/down/hole_01.bmp" ,
+															  "resources/break/down/hole_02.bmp" ,
+															  "resources/break/down/hole_03.bmp" ,
+															  "resources/break/down/hole_04.bmp" ,
+															  "resources/break/down/hole_05.bmp" ,
+															  "resources/break/down/hole_06.bmp" ,
+															  "resources/break/down/hole_07.bmp" ,
+															  "resources/break/down/hole_08.bmp" ,
+															  "resources/break/down/hole_09.bmp" ,
+															  "resources/break/down/hole_10.bmp" ,
+															  "resources/break/down/hole_11.bmp" ,
+															  "resources/break/down/hole_12.bmp" ,
+															  "resources/break/down/hole_13.bmp" ,
+															  "resources/break/down/hole_14.bmp" ,
+															  "resources/break/down/hole_15.bmp" ,
+															  "resources/break/down/hole_16.bmp" ,
+															  "resources/break/down/hole_17.bmp" ,
+															}, RGB(255, 255, 255));
 				break;
 			case 1:
 				stage[stageid - 1][i][j].LoadBitmapByString({ "resources/black.bmp" });
@@ -234,65 +374,18 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		character.C_Animation(1);
 	}
 	else if (nChar == VK_LEFT || nChar == 0x41) {
-		int x = character.GetLeft() - speed_x;
-		int y = character.GetTop();
-		if (character.GetPos() == 0) {
-			character.StopAnimation();
-			character.C_Animation(2);
-			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
-		}
-		else if (map[y / 44][x / 40] == 3) {
-			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
-			character.C_Animation(6);
-		}
-		else if (map[y / 44 + 1][(x + speed_x) / 40] == 1 && map[y / 44][x / 40] == 1 && x % 40 == 0) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			character.C_Animation(8);
-		}
-		else if (map[y / 44][x / 40] != 0) {
-			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
-			character.C_Animation(2);
-		}
+		keyleft = true;
 	}
 	else if (nChar == VK_DOWN || nChar == 0x53)
 	{
-		int x = character.GetLeft() + character.GetWidth() / 2;
-		int y = character.GetTop() + character.GetHeight();
-		if (map[y / 44][x / 40] == 2) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			character.C_Animation(3);
-		}
-		else if (map[(y - character.GetHeight()) / 44 + 1][(x - character.GetWidth() / 2) / 40] == 1) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			character.C_Animation(8);
-			//不在正中間待修
-		}
+		keydown = true;
 	}
 	else if (nChar == VK_RIGHT || nChar == 0x44) {
-		int x = character.GetLeft() + character.GetWidth();
-		int y = character.GetTop();
-		if (map[y / 44][x / 40] == 3) {
-			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
-			character.C_Animation(5);
-		}
-		else if (map[y / 44 + 1][(x - character.GetWidth() + speed_x) / 40] == 1 && map[y / 44][(x - character.GetWidth() + speed_x) / 40] == 1 && x % 40 == 0) {
-			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() + speed_y);
-			character.C_Animation(8);
-		}
-		else if (map[y / 44][x / 40] != 0) {
-			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
-			character.C_Animation(1);
-		}
+		keyright = true;
 	}
 	else if (nChar == VK_UP || nChar == 0x57)
 	{
-		int x = character.GetLeft();
-		int y = character.GetTop() + character.GetHeight() - 1;
-		if (map[y / 44][x / 40] == 2)
-		{
-			character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
-			character.C_Animation(3);
-		}
+		keyup = true;
 	}
 	else if (nChar == VK_SPACE)
 	{
@@ -366,12 +459,35 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 		}
 	}
+	else if (nChar == 0x51) {
+		stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].SetFrameIndexOfBitmap(1);
+		stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].DigLeft();
+		digleft = true;
+	}
+	else if (nChar == 0x58) {
+		stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].SetFrameIndexOfBitmap(10);
+		stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].DigRight();
+		digright = true;
+	}
 }
 
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-
+	if (nChar == VK_LEFT || nChar == 0x41) {
+		keyleft = false;
+	}
+	else if (nChar == VK_DOWN || nChar == 0x53)
+	{
+		keydown = false;
+	}
+	else if (nChar == VK_RIGHT || nChar == 0x44) {
+		keyright = false;
+	}
+	else if (nChar == VK_UP || nChar == 0x57)
+	{
+		keyup = false;
+	}
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
@@ -396,23 +512,31 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動
 
 void CGameStateRun::OnShow()
 {
-	for (int i = 0; i < 18; i++) {
-		for (int j = 0; j < 28; j++) {
-			stage[stageid - 1][i][j].ShowBitmap();
+	if (!finished) {
+		for (int i = 0; i < 18; i++) {
+			for (int j = 0; j < 28; j++) {
+				stage[stageid - 1][i][j].ShowBitmap();
+				
+			}
 		}
-	}
-	character.ShowBitmap();
-	character.C_Animation(0);
+		character.ShowBitmap();
+		character.C_Animation(0);
 
-	monster[0].ShowBitmap();
-	monster[0].Animation(0);
-	monster[1].ShowBitmap();
-	monster[1].Animation(0);
-	monster[2].ShowBitmap();
-	monster[2].Animation(0);
-	CDC *pDC = CDDraw::GetBackCDC();
+		monster[0].ShowBitmap();
+		monster[0].Animation(0);
+		monster[1].ShowBitmap();
+		monster[1].Animation(0);
+		monster[2].ShowBitmap();
+		monster[2].Animation(0);
+	}
+	else {
+		CDC *pDC = CDDraw::GetBackCDC();
+		CTextDraw::Print(pDC, 500, 380, "Game over");
+		CDDraw::ReleaseBackCDC();
+	}
+	/*CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC();
+	CDDraw::ReleaseBackCDC();*/
 }
 
 

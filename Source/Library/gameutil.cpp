@@ -429,7 +429,7 @@ namespace game_framework {
 		switch (num)
 		{
 		case 0:
-			Sleep(10);
+			//Sleep(10);
 			if (pos == 0 && !stopanimate) {
 				if (GetFrameIndexOfBitmap() == 2) {
 					SetFrameIndexOfBitmap(0);
@@ -712,6 +712,10 @@ namespace game_framework {
 	}
 	void CMovingBitmap::EnemyMove(CMovingBitmap character, int map[18][28]) {
 		int left, right, x;
+		if (map[GetTop() / 44 + 1][GetLeft() / 40] == 1 && map[GetTop() / 44][GetLeft() / 40] != 3) {
+			SetTopLeft(GetLeft(), GetTop() + speed_y);
+			direction = 2;
+		}
 		if (direction == 0) {
 			downstair[0] = -1;
 			downstair[1] = -1;
@@ -890,12 +894,13 @@ namespace game_framework {
 					Animation(1);
 				}
 				else {
-					SetTopLeft(12 * 40, 44 * 3);
+					//SetTopLeft(12 * 40, 44 * 3);
+					catched = true;
 					direction = 0;
 				}
 			}
 			else {
-				SetTopLeft(12 * 40, 44 * 3);
+				//SetTopLeft(12 * 40, 44 * 3);
 				direction = 0;
 				//角色在梯子怪物的移動模式待寫
 			}
@@ -952,6 +957,46 @@ namespace game_framework {
 				direction = 0;
 			}
 		}
+	}
+	void CMovingBitmap::DigLeft() {
+		if (first) {
+			recover = clock();
+			first = false;
+		}
+		if (clock() - time_dig >= 100) {
+			SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+			time_dig = clock();
+		}
+	}
+	void CMovingBitmap::DigRight() {
+		if (first) {
+			recover = clock();
+			first = false;
+		}
+		if (clock() - time_dig >= 100) {
+			SetFrameIndexOfBitmap(GetFrameIndexOfBitmap() + 1);
+			time_dig = clock();
+		}
+	}
+	bool CMovingBitmap::IsDig() {
+		if (!first) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	void CMovingBitmap::DigReset() {
+		if (clock() - recover >= 4500) {
+			SetFrameIndexOfBitmap(0);
+			first = true;
+		}
+		else if (clock() - recover >= 3500) {
+			SetFrameIndexOfBitmap(9);
+		}
+	}
+	bool CMovingBitmap::IsCatch() {
+		return catched;
 	}
 }         
 

@@ -125,6 +125,13 @@ namespace game_framework {
 		int upstair[2] = { -1, -1 };
 		int gold = -1;
 		int CountEnemy = 0;
+		bool digright = false;
+		bool digleft = false;
+		bool keyleft = false;
+		bool keyright = false;
+		bool keyup = false;
+		bool keydown = false;
+		bool finished = false;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
