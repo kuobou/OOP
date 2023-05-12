@@ -38,9 +38,12 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			}
 		}
 	}
-	if (monster[0].IsCatch() || monster[1].IsCatch() || monster[2].IsCatch()) {
-		finished = true;
+	for (int i = 0; i < CountEnemy; i++) {
+		if (monster[i].IsCatch()) {
+			finished = true;
+		}
 	}
+	
 	if (gold == 0) {
 		gold = 0;
 		CountEnemy = 0;
@@ -164,7 +167,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.C_Animation(2);
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
 		}
-		else if (map[y / 44][x / 40] == 3) {
+		else if (map[y / 44][x / 40] == 3 && y % 44 == 0) {
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
 			character.C_Animation(6);
 		}
@@ -194,7 +197,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	else if (keyright) {
 		int x = character.GetLeft() + character.GetWidth();
 		int y = character.GetTop();
-		if (map[y / 44][x / 40] == 3) {
+		if (map[y / 44][x / 40] == 3 && y % 44 == 0) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
 			character.C_Animation(5);
 		}
@@ -526,12 +529,10 @@ void CGameStateRun::OnShow()
 		character.ShowBitmap();
 		character.C_Animation(0);
 
-		monster[0].ShowBitmap();
-		monster[0].Animation(0);
-		monster[1].ShowBitmap();
-		monster[1].Animation(0);
-		monster[2].ShowBitmap();
-		monster[2].Animation(0);
+		for (int i = 0; i < CountEnemy; i++) {
+			monster[i].ShowBitmap();
+			monster[i].Animation(0);
+		}
 	}
 	else {
 		CDC *pDC = CDDraw::GetBackCDC();
