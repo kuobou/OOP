@@ -681,7 +681,7 @@ namespace game_framework {
 	bool  CMovingBitmap::IsGround(int map[18][28]) {
 		int x = GetLeft();
 		int y = GetTop();
-		if (map[y / 44 + 1][x / 40] == 0 || map[y / 44 + 1][x / 40] == 2 || map[y / 44][x / 40] == 3) {
+		if (! (map[y / 44 + 1][x / 40] == 4 || map[y / 44 + 1][x / 40] == 1)) {
 			return true;
 		}
 		else {
@@ -712,7 +712,7 @@ namespace game_framework {
 	}
 	void CMovingBitmap::EnemyMove(CMovingBitmap character, int map[18][28]) {
 		int left, right, x;
-		if (map[GetTop() / 44 + 1][GetLeft() / 40] == 1 && map[GetTop() / 44][GetLeft() / 40] != 3) {
+		if (map[GetTop() / 44 + 1][GetLeft() / 40] == 1 && map[GetTop() / 44][GetLeft() / 40] != 3 && GetLeft() % 40 == 0) {
 			SetTopLeft(GetLeft(), GetTop() + speed_y);
 			direction = 2;
 		}

@@ -28,6 +28,7 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	test = character.GetTop();
 	for (int i = 0;i < 18; i++) {
 		for (int j = 0; j < 28; j++) {
 			if (stage[stageid - 1][i][j].IsDig()) {
@@ -40,7 +41,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	}
 	for (int i = 0; i < CountEnemy; i++) {
 		if (monster[i].IsCatch()) {
-			finished = true;
+			//finished = true;
 		}
 	}
 	
@@ -132,13 +133,14 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		}
 	}
 	if (character.GetPos() == 8) {
-		if (character.GetTop() % 44 == 0) {
-			if (map[character.GetTop() / 44 + 1][(character.GetLeft()+ speed_x) / 40] == 1) {
-				character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			}
-			else {
-				character.C_Animation(1);
-			}
+		if (map[character.GetTop() / 44 + 1][(character.GetLeft()+ speed_x) / 40] == 1) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+		}
+		else if (!character.IsGround(map)) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+		}
+		else {
+			character.C_Animation(1);
 		}
 	}
 	if (digright) {
@@ -159,7 +161,31 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			digleft = false;
 		}
 	}
-	else if (keyleft) {
+	else if (keydown)
+	{
+		int x = character.GetLeft();
+		int y = character.GetTop() + character.GetHeight();
+		if (map[y / 44][x / 40] == 2 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			character.C_Animation(3);
+		}
+		else if (map[(y - character.GetHeight()) / 44 + 1][x / 40] == 1) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			character.C_Animation(8);
+			//不在正中間待修
+		}
+	}
+	else if (keyup && character.GetTop() > 0)
+	{
+		int x = character.GetLeft();
+		int y = character.GetTop() + character.GetHeight() - 1;
+		if (map[y / 44][x / 40] == 2 && x % 40 == 0)
+		{
+			character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
+			character.C_Animation(3);
+		}
+	}
+	else if (keyleft && character.GetLeft() > 0) {
 		int x = character.GetLeft() - speed_x;
 		int y = character.GetTop();
 		if (character.GetPos() == 0) {
@@ -175,23 +201,9 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
 			character.C_Animation(8);
 		}
-		else if ((y % 44 == 0 && map[y / 44][x / 40] != 0) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44][x / 40] != 0)) && character.GetLeft() > 0) {
+		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && ((map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5))) && character.GetLeft() > 0) {
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
 			character.C_Animation(2);
-		}
-	}
-	else if (keydown)
-	{
-		int x = character.GetLeft();
-		int y = character.GetTop() + character.GetHeight();
-		if (map[y / 44][x / 40] == 2 && x % 40 == 0) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			character.C_Animation(3);
-		}
-		else if (map[(y - character.GetHeight()) / 44 + 1][x  / 40] == 1) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			character.C_Animation(8);
-			//不在正中間待修
 		}
 	}
 	else if (keyright) {
@@ -201,28 +213,13 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
 			character.C_Animation(5);
 		}
-		else if (map[y / 44 + 1][(x - character.GetWidth() + speed_x) / 40] == 1 && map[y / 44][(x - character.GetWidth() + speed_x) / 40] == 1 && x % 40 == 0) {
-			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() + speed_y);
+		else if (map[y / 44 + 1][(x - character.GetWidth() + speed_x) / 40] == 1 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
 			character.C_Animation(8);
 		}
-		else if ((y % 44 == 0 && map[y / 44][x / 40] != 0) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44][x / 40] != 0))) {
+		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && ((map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)))) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
 			character.C_Animation(1);
-		}
-	}
-	else if (keyup)
-	{
-		int x = character.GetLeft();
-		int y = character.GetTop() + character.GetHeight() - 1;
-		if (map[y / 44][x / 40] == 2 && x % 40 == 0)
-		{
-			character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
-			character.C_Animation(3);
-		}
-	}
-	if (character.GetPos() == 8) {
-		if (!character.IsGround(map)) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
 		}
 	}
 	if (character.IsGold(map)) {
@@ -410,7 +407,25 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			for (int j = 0; j < 28; j++) {
 				switch (map[i][j]) {
 				case 0:
-					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/brick.bmp" });
+					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/break/down/hole_00.bmp" ,
+															  "resources/break/down/hole_01.bmp" ,
+															  "resources/break/down/hole_02.bmp" ,
+															  "resources/break/down/hole_03.bmp" ,
+															  "resources/break/down/hole_04.bmp" ,
+															  "resources/break/down/hole_05.bmp" ,
+															  "resources/break/down/hole_06.bmp" ,
+															  "resources/break/down/hole_07.bmp" ,
+															  "resources/break/down/hole_08.bmp" ,
+															  "resources/break/down/hole_09.bmp" ,
+															  "resources/break/down/hole_10.bmp" ,
+															  "resources/break/down/hole_11.bmp" ,
+															  "resources/break/down/hole_12.bmp" ,
+															  "resources/break/down/hole_13.bmp" ,
+															  "resources/break/down/hole_14.bmp" ,
+															  "resources/break/down/hole_15.bmp" ,
+															  "resources/break/down/hole_16.bmp" ,
+															  "resources/break/down/hole_17.bmp" ,
+																}, RGB(255, 255, 255));
 					break;
 				case 1:
 					stage[stageid - 1][i][j].LoadBitmapByString({ "resources/black.bmp" });
@@ -470,7 +485,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 	else if (nChar == 0x58) {
-		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1] == 0) {
+		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1] == 0) {
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].SetFrameIndexOfBitmap(10);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].DigRight();
 			digright = true;
@@ -539,9 +554,9 @@ void CGameStateRun::OnShow()
 		CTextDraw::Print(pDC, 500, 380, "Game over");
 		CDDraw::ReleaseBackCDC();
 	}
-	/*CDC *pDC = CDDraw::GetBackCDC();
+	CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC();*/
+	CDDraw::ReleaseBackCDC();
 }
 
 
