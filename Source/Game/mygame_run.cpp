@@ -28,7 +28,6 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
-	test = character.GetTop();
 	for (int i = 0;i < 18; i++) {
 		for (int j = 0; j < 28; j++) {
 			if (stage[stageid - 1][i][j].IsDig()) {
@@ -165,8 +164,18 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	{
 		int x = character.GetLeft();
 		int y = character.GetTop() + character.GetHeight();
-		if (map[y / 44][x / 40] == 2 && x % 40 == 0) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+		if (map[y / 44][x / 40] == 2) {
+			if(x % 40 == 0){
+				character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+				character.C_Animation(3);
+			}
+			else if(x % 40 <= 20){
+				character.SetTopLeft(character.GetLeft() - character.GetLeft() % 40, character.GetTop() + speed_y);
+				character.C_Animation(3);
+			}
+		}
+		else if (map[y / 44][x / 40 + 1] == 2 && x % 40 > 20) {
+			character.SetTopLeft(character.GetLeft() - character.GetLeft() % 40 + 40, character.GetTop() + speed_y);
 			character.C_Animation(3);
 		}
 		else if (map[(y - character.GetHeight()) / 44 + 1][x / 40] == 1) {
@@ -179,9 +188,19 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	{
 		int x = character.GetLeft();
 		int y = character.GetTop() + character.GetHeight() - 1;
-		if (map[y / 44][x / 40] == 2 && x % 40 == 0)
+		if (map[y / 44][x / 40] == 2)
 		{
-			character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
+			if (x % 40 == 0) {
+				character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
+				character.C_Animation(3);
+			}
+			else if(x % 40 <= 20){
+				character.SetTopLeft(character.GetLeft() - character.GetLeft() % 40, character.GetTop() - speed_y);
+				character.C_Animation(3);
+			}
+		}
+		else if (map[y / 44][x / 40 + 1] == 2 && x % 40 > 20) {
+			character.SetTopLeft(character.GetLeft() - character.GetLeft() % 40 + 40, character.GetTop() - speed_y);
 			character.C_Animation(3);
 		}
 	}
@@ -193,8 +212,8 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.C_Animation(2);
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
 		}
-		else if (map[y / 44][x / 40] == 3 && y % 44 == 0) {
-			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
+		else if (map[y / 44][x / 40] == 3 && y % 44 <= 22) {
+			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop() - y % 44);
 			character.C_Animation(6);
 		}
 		else if (map[y / 44 + 1][(x + speed_x) / 40] == 1 && map[y / 44][x / 40] == 1 && x % 40 == 0) {
@@ -209,8 +228,8 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	else if (keyright) {
 		int x = character.GetLeft() + character.GetWidth();
 		int y = character.GetTop();
-		if (map[y / 44][x / 40] == 3 && y % 44 == 0) {
-			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
+		if (map[y / 44][x / 40] == 3 && y % 44 <= 22) {
+			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() - y % 44);
 			character.C_Animation(5);
 		}
 		else if (map[y / 44 + 1][(x - character.GetWidth() + speed_x) / 40] == 1 && x % 40 == 0) {
@@ -478,14 +497,14 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 	else if (nChar == 0x51) {
-		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1] == 0) {
+		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1] == 0 && !digleft) {
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].SetFrameIndexOfBitmap(1);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].DigLeft();
 			digleft = true;
 		}
 	}
 	else if (nChar == 0x58) {
-		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1] == 0) {
+		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1] == 0 && !digright) {
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].SetFrameIndexOfBitmap(10);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].DigRight();
 			digright = true;
@@ -554,9 +573,9 @@ void CGameStateRun::OnShow()
 		CTextDraw::Print(pDC, 500, 380, "Game over");
 		CDDraw::ReleaseBackCDC();
 	}
-	CDC *pDC = CDDraw::GetBackCDC();
+	/*CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC();
+	CDDraw::ReleaseBackCDC();*/
 }
 
 
