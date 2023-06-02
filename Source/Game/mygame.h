@@ -132,6 +132,9 @@ namespace game_framework {
 		bool keyup = false;
 		bool keydown = false;
 		bool finished = false;
+		bool drop = false;
+		int score = 0;
+		int life = 5;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

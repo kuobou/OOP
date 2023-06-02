@@ -28,6 +28,13 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	stage[stageid - 1][17][11].SetFrameIndexOfBitmap(score % 10);
+	stage[stageid - 1][17][10].SetFrameIndexOfBitmap((score / 10) % 10);
+	stage[stageid - 1][17][9].SetFrameIndexOfBitmap((score / 100) % 10);
+	stage[stageid - 1][17][8].SetFrameIndexOfBitmap((score / 1000) % 10);
+	stage[stageid - 1][17][7].SetFrameIndexOfBitmap((score / 10000) % 10);
+	stage[stageid - 1][17][6].SetFrameIndexOfBitmap((score / 100000) % 10);
+	stage[stageid - 1][17][5].SetFrameIndexOfBitmap((score / 1000000) % 10);
 	for (int i = 0;i < 18; i++) {
 		for (int j = 0; j < 28; j++) {
 			if (stage[stageid - 1][i][j].IsDig()) {
@@ -39,15 +46,30 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		}
 	}
 	for (int i = 0; i < CountEnemy; i++) {
-		if (monster[i].IsCatch()) {
+		if (0) {
+			gold = 0;
+			digleft = false;
+			digright = false;
+			for (int i = 0; i < 16; i++) {
+				for (int j = 0; j < 28; j++) {
+					stage[stageid - 1][i][j].SetFrameIndexOfBitmap(0);
+				}
+			}
+			stageid--;
+			monster[i].ResetCatch();
+			life -=2;
 			//finished = true;
 		}
 	}
-	
+	if (life == 0) {
+		finished = true;
+	}
 	if (gold == 0) {
+		score += 1500;
 		gold = 0;
 		CountEnemy = 0;
 		stageid++;
+		life++;
 		ifstream ifs;
 		ifs.open("map_entity/Stage" + to_string(stageid) + "_entity.txt");
 
@@ -105,10 +127,160 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 				stage[stageid - 1][i][j].SetTopLeft(j * 40, i * 44);
 			}
 		}
+		stage[stageid - 1][17][0].LoadBitmapByString({ "resources/text/S.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][1].LoadBitmapByString({ "resources/text/C.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][2].LoadBitmapByString({ "resources/text/O.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][3].LoadBitmapByString({ "resources/text/R.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][4].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][5].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][6].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][7].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][8].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][9].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][10].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][11].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][12].LoadBitmapByString({ "resources/black.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][13].LoadBitmapByString({ "resources/text/M.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][14].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][15].LoadBitmapByString({ "resources/text/M.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][16].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][17].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][18].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][19].LoadBitmapByString({ "resources/black.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][20].LoadBitmapByString({ "resources/text/L.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][21].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][22].LoadBitmapByString({ "resources/text/V.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][23].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][24].LoadBitmapByString({ "resources/text/L.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][25].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][26].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][27].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][27].SetFrameIndexOfBitmap(stageid % 10);
+		stage[stageid - 1][17][26].SetFrameIndexOfBitmap((stageid / 10) % 10);
+		stage[stageid - 1][17][25].SetFrameIndexOfBitmap((stageid / 100) % 10);
+		stage[stageid - 1][17][18].SetFrameIndexOfBitmap(life % 10);
+		stage[stageid - 1][17][17].SetFrameIndexOfBitmap((life / 10) % 10);
+		stage[stageid - 1][17][16].SetFrameIndexOfBitmap((life / 100) % 10);
 		for (int i = 0; i < 28; i++) {
 			stage[stageid - 1][16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
 			stage[stageid - 1][16][i].SetTopLeft(i * 40, 16 * 44);
-			stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
 			stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 		}
 		ifs.open("map_set/Stage" + to_string(stageid) + "_set.txt");
@@ -132,14 +304,16 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		}
 	}
 	if (character.GetPos() == 8) {
+		drop = true;
 		if (map[character.GetTop() / 44 + 1][(character.GetLeft()+ speed_x) / 40] == 1) {
 			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
 		}
-		else if (!character.IsGround(map)) {
+		else if (!character.IsGround(map, 0)) {
 			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
 		}
 		else {
 			character.C_Animation(1);
+			drop = false;
 		}
 	}
 	if (digright) {
@@ -162,6 +336,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	}
 	else if (keydown)
 	{
+		drop = false;
 		int x = character.GetLeft();
 		int y = character.GetTop() + character.GetHeight();
 		if (map[y / 44][x / 40] == 2) {
@@ -186,6 +361,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	}
 	else if (keyup && character.GetTop() > 0)
 	{
+		drop = false;
 		int x = character.GetLeft();
 		int y = character.GetTop() + character.GetHeight() - 1;
 		if (map[y / 44][x / 40] == 2)
@@ -204,7 +380,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.C_Animation(3);
 		}
 	}
-	else if (keyleft && character.GetLeft() > 0) {
+	else if (keyleft && character.GetLeft() > 0 && !drop) {
 		int x = character.GetLeft() - speed_x;
 		int y = character.GetTop();
 		if (character.GetPos() == 0) {
@@ -216,24 +392,26 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop() - y % 44);
 			character.C_Animation(6);
 		}
-		else if (map[y / 44 + 1][(x + speed_x) / 40] == 1 && map[y / 44][x / 40] == 1 && x % 40 == 0) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+		else if (!character.IsGround(map, -speed_x) && map[y / 44][x / 40] == 1 && x % 40 < 20) {
+			character.SetTopLeft(character.GetLeft() - speed_x - x % 40, character.GetTop() + speed_y);
 			character.C_Animation(8);
+			drop = true;
 		}
 		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && ((map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5))) && character.GetLeft() > 0) {
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
 			character.C_Animation(2);
 		}
 	}
-	else if (keyright) {
+	else if (keyright && !drop && character.GetLeft() + character.GetWidth() <= 1140) {
 		int x = character.GetLeft() + character.GetWidth();
 		int y = character.GetTop();
 		if (map[y / 44][x / 40] == 3 && y % 44 <= 22) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() - y % 44);
 			character.C_Animation(5);
 		}
-		else if (map[y / 44 + 1][(x - character.GetWidth() + speed_x) / 40] == 1 && x % 40 == 0) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+		else if (!character.IsGround(map, speed_x + character.GetWidth()) && (x + speed_x) % 40 >= 30) {
+			character.SetTopLeft(character.GetLeft() + 40 - x % 40, character.GetTop() + speed_y);
+			drop = true;
 			character.C_Animation(8);
 		}
 		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && ((map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)))) {
@@ -245,6 +423,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		map[character.GetTop() / 44][character.GetLeft() / 40] = 1;
 		stage[stageid - 1][character.GetTop() / 44][character.GetLeft() / 40].SetFrameIndexOfBitmap(1);
 		gold--;
+		score += 250;
 	}
 	if (character.GetPos() != 0) {
 		for (int i = 0; i < CountEnemy; i++) {
@@ -314,12 +493,161 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		}
 	}
 	gold = count;
+	stage[stageid - 1][17][0].LoadBitmapByString({ "resources/text/S.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][1].LoadBitmapByString({ "resources/text/C.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][2].LoadBitmapByString({ "resources/text/O.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][3].LoadBitmapByString({ "resources/text/R.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][4].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][5].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp"}, RGB(255, 255, 255));
+	stage[stageid - 1][17][6].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][7].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][8].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][9].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][10].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][11].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][12].LoadBitmapByString({ "resources/black.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][13].LoadBitmapByString({ "resources/text/M.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][14].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][15].LoadBitmapByString({ "resources/text/M.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][16].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][17].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][18].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][19].LoadBitmapByString({ "resources/black.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][20].LoadBitmapByString({ "resources/text/L.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][21].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][22].LoadBitmapByString({ "resources/text/V.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][23].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][24].LoadBitmapByString({ "resources/text/L.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][25].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][26].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][27].LoadBitmapByString({ "resources/text/_0.bmp",
+												   "resources/text/_1.bmp",
+												   "resources/text/_2.bmp",
+												   "resources/text/_3.bmp",
+												   "resources/text/_4.bmp",
+												   "resources/text/_5.bmp",
+												   "resources/text/_6.bmp",
+												   "resources/text/_7.bmp",
+												   "resources/text/_8.bmp",
+												   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+	stage[stageid - 1][17][18].SetFrameIndexOfBitmap(life % 10);
+	stage[stageid - 1][17][17].SetFrameIndexOfBitmap((life / 10) % 10);
+	stage[stageid - 1][17][16].SetFrameIndexOfBitmap((life / 100) % 10);
+	stage[stageid - 1][17][27].SetFrameIndexOfBitmap(1);
 	for (int i = 0; i < 28; i++) {
 		stage[stageid - 1][16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
 		stage[stageid - 1][16][i].SetTopLeft(i * 40, 16 * 44);
-		stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
 		stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 	}
+
 	ifs.open("map_set/Stage" + to_string(stageid) + "_set.txt");
 
 	for (int i = 0; i < 16; i++) {
@@ -384,6 +712,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 			}
 		}
 	}
+
+	//CAudio *m = CAudio::Instance();
+	//m->Load(0 , "resources/bgm.mp3");
+	//m->Play(0);
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -408,6 +740,10 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if (nChar == VK_SPACE)
 	{
+		score += 1500;
+		digleft = false;
+		digright = false;
+		life++;
 		gold = -1;
 		int count = 0;
 		CountEnemy = 0;
@@ -468,12 +804,163 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				stage[stageid - 1][i][j].SetTopLeft(j * 40, i * 44);
 			}
 		}
+		stage[stageid - 1][17][0].LoadBitmapByString({ "resources/text/S.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][1].LoadBitmapByString({ "resources/text/C.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][2].LoadBitmapByString({ "resources/text/O.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][3].LoadBitmapByString({ "resources/text/R.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][4].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][5].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][6].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][7].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][8].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][9].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][10].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][11].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][12].LoadBitmapByString({ "resources/black.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][13].LoadBitmapByString({ "resources/text/M.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][14].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][15].LoadBitmapByString({ "resources/text/M.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][16].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][17].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][18].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][19].LoadBitmapByString({ "resources/black.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][20].LoadBitmapByString({ "resources/text/L.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][21].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][22].LoadBitmapByString({ "resources/text/V.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][23].LoadBitmapByString({ "resources/text/E.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][24].LoadBitmapByString({ "resources/text/L.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][25].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][26].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][27].LoadBitmapByString({ "resources/text/_0.bmp",
+													   "resources/text/_1.bmp",
+													   "resources/text/_2.bmp",
+													   "resources/text/_3.bmp",
+													   "resources/text/_4.bmp",
+													   "resources/text/_5.bmp",
+													   "resources/text/_6.bmp",
+													   "resources/text/_7.bmp",
+													   "resources/text/_8.bmp",
+													   "resources/text/_9.bmp" }, RGB(255, 255, 255));
+		stage[stageid - 1][17][27].SetFrameIndexOfBitmap(stageid % 10);
+		stage[stageid - 1][17][26].SetFrameIndexOfBitmap((stageid / 10) % 10);
+		stage[stageid - 1][17][25].SetFrameIndexOfBitmap((stageid / 100) % 10);
+		stage[stageid - 1][17][18].SetFrameIndexOfBitmap(life % 10);
+		stage[stageid - 1][17][17].SetFrameIndexOfBitmap((life / 10) % 10);
+		stage[stageid - 1][17][16].SetFrameIndexOfBitmap((life / 100) % 10);
 		for (int i = 0; i < 28; i++) {
 			stage[stageid - 1][16][i].LoadBitmapByString({ "resources/ground.bmp" }, RGB(255, 255, 255));
 			stage[stageid - 1][16][i].SetTopLeft(i * 40, 16 * 44);
-			stage[stageid - 1][17][i].LoadBitmapByString({ "resources/brick.bmp" });
 			stage[stageid - 1][17][i].SetTopLeft(i * 40, 17 * 44 - 22);
 		}
+
 		gold = count;
 
 		ifs.open("map_set/Stage" + to_string(stageid) + "_set.txt");
@@ -575,7 +1062,7 @@ void CGameStateRun::OnShow()
 	}
 	/*CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC();*/
+	CDDraw::ReleaseBackCDC()*/;
 }
 
 

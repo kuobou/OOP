@@ -126,7 +126,7 @@ namespace game_framework {
 		void C_Animation(int num);
 		int  GetPos();
 		void StopAnimation();
-		bool IsGround(int map[18][28]);
+		bool IsGround(int map[18][28], int p);
 		bool IsGold(int map[18][28]);
 		void SetCharacter(char set[18][28]);
 		void EnemyMove(CMovingBitmap character, int map[18][28]);
@@ -136,6 +136,7 @@ namespace game_framework {
 		void DigReset();
 		bool IsDig();
 		bool IsCatch();
+		void ResetCatch();
 	protected:
 		//! 當前幀的索引值。
 		int frameIndex = 0;

@@ -678,10 +678,10 @@ namespace game_framework {
 	void CMovingBitmap::StopAnimation() {
 		stopanimate = true;
 	}
-	bool  CMovingBitmap::IsGround(int map[18][28]) {
+	bool  CMovingBitmap::IsGround(int map[18][28], int p) {
 		int x = GetLeft();
 		int y = GetTop();
-		if (! (map[y / 44 + 1][x / 40] == 4 || map[y / 44 + 1][x / 40] == 1)) {
+		if (map[y / 44 + 1][(x + p) / 40] == 0 || map[y / 44 + 1][(x + p) / 40] == 2 || map[y / 44 + 1][(x + p) / 40] == 5) {
 			return true;
 		}
 		else {
@@ -987,16 +987,19 @@ namespace game_framework {
 		}
 	}
 	void CMovingBitmap::DigReset() {
-		if (clock() - recover >= 4500) {
+		if (clock() - recover >= 9000) {
 			SetFrameIndexOfBitmap(0);
 			first = true;
 		}
-		else if (clock() - recover >= 3500) {
+		else if (clock() - recover >= 8000) {
 			SetFrameIndexOfBitmap(9);
 		}
 	}
 	bool CMovingBitmap::IsCatch() {
 		return catched;
+	}
+	void CMovingBitmap::ResetCatch() {
+		catched = false;
 	}
 }         
 
