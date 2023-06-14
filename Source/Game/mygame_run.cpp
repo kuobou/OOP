@@ -305,11 +305,32 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	}
 	if (character.GetPos() == 8) {
 		drop = true;
-		if (map[character.GetTop() / 44 + 1][(character.GetLeft()+ speed_x) / 40] == 1) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+		if (map[(character.GetTop()) / 44][character.GetLeft() / 40] == 3 && (character.GetTop()) % 44 == 0) {
+			character.C_Animation(6);
+			drop = false;
+		}
+		else if (map[(character.GetTop() ) / 44][character.GetLeft() / 40] == 2) {
+			if (character.GetLeft() % 40 == 0) {
+				character.C_Animation(3);
+				drop = false;
+			}
+			else {
+				if (map[(character.GetTop() ) / 44][character.GetLeft() / 40 + 1] == 2) {
+					character.C_Animation(3);
+					drop = false;
+				}
+			}
 		}
 		else if (!character.IsGround(map, 0)) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			if (character.GetLeft() % 40 == 0) {
+				character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+			}
+			else {
+				if (!character.IsGround(map, character.GetWidth())) {
+					character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+					test = 1;
+				}
+			}
 		}
 		else {
 			character.C_Animation(1);
@@ -353,9 +374,23 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.SetTopLeft(character.GetLeft() - character.GetLeft() % 40 + 40, character.GetTop() + speed_y);
 			character.C_Animation(3);
 		}
-		else if (map[(y - character.GetHeight()) / 44 + 1][x / 40] == 1) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
-			character.C_Animation(8);
+		else if (!character.IsGround(map, 0)) {
+			if (x % 40 == 0) {
+				character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+				character.C_Animation(8);
+			}
+			else {
+				if (!character.IsGround(map, character.GetWidth())) {
+					character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
+					character.C_Animation(8);
+					if (x % 40 >= 20) {
+						character.SetTopLeft(character.GetLeft() + 40 - x % 40, character.GetTop() + speed_y);
+					}
+					else {
+						character.SetTopLeft(character.GetLeft() - x % 40, character.GetTop() + speed_y);
+					}
+				}
+			}
 			//不在正中間待修
 		}
 	}
@@ -388,6 +423,10 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.C_Animation(2);
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
 		}
+		else if (map[y / 44][x / 40] == 2 && x % 40 == 0) {
+			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop());
+			character.C_Animation(3);
+		}
 		else if (map[y / 44][x / 40] == 3 && y % 44 <= 22) {
 			character.SetTopLeft(character.GetLeft() - speed_x, character.GetTop() - y % 44);
 			character.C_Animation(6);
@@ -402,19 +441,23 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.C_Animation(2);
 		}
 	}
-	else if (keyright && !drop && character.GetLeft() + character.GetWidth() <= 1140) {
+	else if (keyright && !drop && character.GetLeft() <= 1140) {
 		int x = character.GetLeft() + character.GetWidth();
 		int y = character.GetTop();
 		if (map[y / 44][x / 40] == 3 && y % 44 <= 22) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() - y % 44);
 			character.C_Animation(5);
 		}
-		else if (!character.IsGround(map, speed_x + character.GetWidth()) && (x + speed_x) % 40 >= 30) {
+		else if (map[y / 44][character.GetLeft() / 40] == 2 && character.GetLeft() % 40 == 0) {
+			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
+			character.C_Animation(3);
+		}
+		else if (!character.IsGround(map, speed_x) && map[y / 44][(character.GetLeft() + speed_x) / 40] == 1 && x % 40 >= 30) {
 			character.SetTopLeft(character.GetLeft() + 40 - x % 40, character.GetTop() + speed_y);
 			drop = true;
 			character.C_Animation(8);
 		}
-		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && ((map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)))) {
+		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5))) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
 			character.C_Animation(1);
 		}
@@ -983,15 +1026,15 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 		}
 	}
-	else if (nChar == 0x51) {
+	else if (nChar == 0x51 && character.GetTop() / 44 < 15) {
 		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1] == 0 && !digleft) {
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].SetFrameIndexOfBitmap(1);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].DigLeft();
 			digleft = true;
 		}
 	}
-	else if (nChar == 0x58) {
-		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1] == 0 && !digright) {
+	else if (nChar == 0x58 && character.GetTop() / 44 < 15) {
+		if ((character.GetTop() / 44) < 16 && map[character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1] == 0 && !digright) {
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].SetFrameIndexOfBitmap(10);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].DigRight();
 			digright = true;
@@ -1060,9 +1103,9 @@ void CGameStateRun::OnShow()
 		CTextDraw::Print(pDC, 500, 380, "Game over");
 		CDDraw::ReleaseBackCDC();
 	}
-	/*CDC *pDC = CDDraw::GetBackCDC();
+	CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC()*/;
+	CDDraw::ReleaseBackCDC();
 }
 
 
