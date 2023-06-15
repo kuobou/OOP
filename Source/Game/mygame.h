@@ -135,6 +135,8 @@ namespace game_framework {
 		bool drop = false;
 		int score = 0;
 		int life = 5;
+		bool invincible = false;
+		bool g = false;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -711,6 +711,9 @@ namespace game_framework {
 		downstair[1] = -1;
 		upstair[0] = -1;
 		upstair[1] = -1;
+		if (y == character.GetTop() && ((x <= character.GetLeft() && character.GetLeft() <= x + GetWidth()) || (x <= character.GetLeft() + character.GetWidth() && character.GetLeft() + character.GetWidth() <= x + GetWidth()))) {
+			catched = true;
+		}
 		if (GetPos() == 4) {
 			if (map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5){
 				SetTopLeft(x, y + speed_y);
@@ -721,6 +724,10 @@ namespace game_framework {
 				direction = 0;
 				Animation(1);
 			}
+		}
+		else if (GetPos() == 3 && y % 44 == 0 && direction == 1 && map[y / 44][x / 40] != 2) {
+			direction = 0;
+			Animation(1);
 		}
 		else if (direction == 1 && map[y / 44 + 1][x / 40] == 2 && y % 44 != 0 && map[(y - speed_y) / 44][x / 40] != 0 && map[(y - speed_y) / 44][x / 40] != 5) {
 			SetTopLeft(x, y - speed_y);
@@ -1033,7 +1040,31 @@ namespace game_framework {
 				if (!up && !down) {
 					//Animation(1);
 					//direction = 4;
-					if (map[y / 44][x / 40] == 3) {
+					if (y == character.GetTop()) {
+						if (x > character.GetLeft() && map[y / 44][(x - speed_x) / 40] != 0 && map[y / 44][(x - speed_x) / 40] != 5 && !(map[y / 44][(x - speed_x) / 40] != 3 && map[y / 44 + 1][(x - speed_x) / 40] == 1)) {
+							SetTopLeft(x - speed_x, y);
+							if (map[y / 44][(x - speed_x) / 40] == 3) {
+								Animation(6);
+								direction = 3;
+							}
+							else {
+								Animation(2);
+								direction = 3;
+							}
+						}
+						else if (x < character.GetLeft() && map[y / 44][(x + speed_x) / 40 + 1] != 0 && map[y / 44][(x + speed_x) / 40 + 1] != 5 && !(map[y / 44][(x + speed_x) / 40 + 1] != 3 && map[y / 44 + 1][(x + speed_x) / 40 + 1] == 1)) {
+							SetTopLeft(x + speed_x, y);
+							if (map[y / 44][(x + speed_x) / 40] == 3) {
+								Animation(5);
+								direction = 4;
+							}
+							else {
+								Animation(1);
+								direction = 4;
+							}
+						}
+					}
+					else if (map[y / 44][x / 40] == 3) {
 						if (map[(y + speed_y) / 44][x / 40] == 0 || map[(y + speed_y) / 44][x / 40] == 5) {
 							direction = 0;
 						}
@@ -1053,6 +1084,7 @@ namespace game_framework {
 							Animation(3);
 						}
 					}
+					
 				}
 				else {
 					if (y % 44 != 0) {
@@ -1065,7 +1097,7 @@ namespace game_framework {
 							Animation(3);
 						}
 					}
-					else if (x > character.GetLeft() && map[y / 44][(x - speed_x) / 40] != 0 && map[y / 44][(x - speed_x) / 40] != 5) {
+					else if (x > character.GetLeft() && map[y / 44][(x - speed_x) / 40] != 0 && map[y / 44][(x - speed_x) / 40] != 5 && !(map[y / 44][(x - speed_x) / 40] != 3 && map[y / 44 + 1][(x - speed_x) / 40] == 1)) {
 						SetTopLeft(x - speed_x, y);
 						if (map[y / 44][(x - speed_x) / 40] == 3) {
 							Animation(6);
@@ -1076,7 +1108,7 @@ namespace game_framework {
 							direction = 3;
 						}
 					}
-					else if(x < character.GetLeft() && map[y / 44][(x + speed_x) / 40 + 1] != 0 && map[y / 44][(x + speed_x) / 40 + 1] != 5){
+					else if(x < character.GetLeft() && map[y / 44][(x + speed_x) / 40 + 1] != 0 && map[y / 44][(x + speed_x) / 40 + 1] != 5 && !(map[y / 44][(x + speed_x) / 40 + 1] != 3 && map[y / 44 + 1][(x + speed_x) / 40 + 1] == 1)){
 						SetTopLeft(x + speed_x, y);
 						if (map[y / 44][(x + speed_x) / 40] == 3) {
 							Animation(5);

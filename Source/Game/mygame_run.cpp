@@ -28,6 +28,30 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	if (finished) {
+		Sleep(5000);
+		exit(0);
+	}
+	if (stageid == 1 && score != 0 && life != 5) {
+		score = 0;
+	}
+	if (g && gold > 1) {
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 28; j++) {
+				if (gold > 1) {
+					if (map[i][j] == 4) {
+						map[i][j] = 1;
+						stage[stageid - 1][i][j].SetFrameIndexOfBitmap(1);
+						gold--;
+						score += 250;
+					}
+				}
+				else {
+					break;
+				}
+			}
+		}
+	}
 	stage[stageid - 1][17][11].SetFrameIndexOfBitmap(score % 10);
 	stage[stageid - 1][17][10].SetFrameIndexOfBitmap((score / 10) % 10);
 	stage[stageid - 1][17][9].SetFrameIndexOfBitmap((score / 100) % 10);
@@ -45,8 +69,11 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			}
 		}
 	}
+	if (life == 0) {
+		finished = true;
+	}
 	for (int i = 0; i < CountEnemy; i++) {
-		if (0) {
+		if (monster[i].IsCatch() && !invincible) {
 			gold = 0;
 			digleft = false;
 			digright = false;
@@ -58,13 +85,13 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			stageid--;
 			monster[i].ResetCatch();
 			life -=2;
-			//finished = true;
+			if (score >= 1500) {
+				score -= 1500;
+			}
 		}
 	}
-	if (life == 0) {
-		finished = true;
-	}
 	if (gold == 0) {
+		g = false;
 		score += 1500;
 		gold = 0;
 		CountEnemy = 0;
@@ -785,6 +812,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if (nChar == VK_SPACE)
 	{
+		g = false;
 		score += 1500;
 		digleft = false;
 		digright = false;
@@ -1043,6 +1071,20 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			digright = true;
 		}
 	}
+	else if (nChar == 0x49) {
+		bool catching = false;
+		for (int i = 0; i < CountEnemy; i++) {
+			if (monster[i].IsCatch()) {
+				catching = true;
+			}
+		}
+		if (!catching) {
+			invincible = !invincible;
+		}
+	}
+	else if (nChar == 0x47) {
+		g = true;
+	}
 }
 
 
@@ -1103,12 +1145,19 @@ void CGameStateRun::OnShow()
 	}
 	else {
 		CDC *pDC = CDDraw::GetBackCDC();
-		CTextDraw::Print(pDC, 500, 380, "Game over");
+		CTextDraw::ChangeFontLog(pDC, 30, "微軟正黑體", RGB(255, 255, 255), 500);
+		CTextDraw::Print(pDC, 480, 300, "Game over");
+		CTextDraw::Print(pDC, 350, 350, "--Closed in five seconds--");
 		CDDraw::ReleaseBackCDC();
 	}
-	CDC *pDC = CDDraw::GetBackCDC();
+	if (invincible) {
+		CDC *pDC = CDDraw::GetBackCDC();
+		CTextDraw::Print(pDC, 0, 0, "invincible");
+		CDDraw::ReleaseBackCDC();
+	}
+	/*CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC();
+	CDDraw::ReleaseBackCDC();*/
 }
 
 
