@@ -137,6 +137,7 @@ namespace game_framework {
 		int life = 5;
 		bool invincible = false;
 		bool g = false;
+		bool burn = true;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

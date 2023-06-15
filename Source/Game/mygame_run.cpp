@@ -9,7 +9,7 @@
 #include <fstream>
 #include <string>
 using namespace game_framework;
-
+CAudio *m = CAudio::Instance();
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲執行物件，主要的遊戲程式都在這裡
 /////////////////////////////////////////////////////////////////////////////
@@ -28,8 +28,12 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
-	test = character.GetLeft();
+	if (burn) {
+		m->Play(0);
+		burn = false;
+	}
 	if (finished) {
+		m->Play(4);
 		Sleep(5000);
 		exit(0);
 	}
@@ -89,6 +93,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			if (score >= 1500) {
 				score -= 1500;
 			}
+			m->Play(1);
 		}
 	}
 	if (gold == 0) {
@@ -337,16 +342,19 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		if (map[(character.GetTop()) / 44][character.GetLeft() / 40] == 3 && (character.GetTop()) % 44 == 0) {
 			character.C_Animation(6);
 			drop = false;
+			m->Stop(3);
 		}
 		else if (map[(character.GetTop() ) / 44][character.GetLeft() / 40] == 2) {
 			if (character.GetLeft() % 40 == 0) {
 				character.C_Animation(3);
 				drop = false;
+				m->Stop(3);
 			}
 			else {
 				if (map[(character.GetTop() ) / 44][character.GetLeft() / 40 + 1] == 2) {
 					character.C_Animation(3);
 					drop = false;
+					m->Stop(3);
 				}
 			}
 		}
@@ -364,6 +372,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		else {
 			character.C_Animation(1);
 			drop = false;
+			m->Stop(3);
 		}
 	}
 	if (digright) {
@@ -407,6 +416,8 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			if (x % 40 == 0) {
 				character.SetTopLeft(character.GetLeft(), character.GetTop() + speed_y);
 				character.C_Animation(8);
+				drop = true;
+				m->Play(3);
 			}
 			else {
 				if (!character.IsGround(map, character.GetWidth())) {
@@ -420,7 +431,6 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 					}
 				}
 			}
-			//不在正中間待修
 		}
 	}
 	else if (keyup && character.GetTop() > 0)
@@ -463,6 +473,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		else if (!character.IsGround(map, -speed_x) && map[y / 44][x / 40] == 1 && x % 40 < 20) {
 			character.SetTopLeft(character.GetLeft() - speed_x - x % 40, character.GetTop() + speed_y);
 			character.C_Animation(8);
+			m->Play(3);
 			drop = true;
 		}
 		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && ((map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5))) && character.GetLeft() > 0) {
@@ -470,7 +481,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.C_Animation(2);
 		}
 	}
-	else if (keyright && !drop && character.GetLeft() <= 1140) {
+	else if (keyright && !drop && character.GetLeft() < 1080) {
 		int x = character.GetLeft() + character.GetWidth();
 		int y = character.GetTop();
 		if (map[y / 44][x / 40] == 3 && y % 44 <= 22) {
@@ -485,8 +496,14 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.SetTopLeft(character.GetLeft() + 40 - x % 40, character.GetTop() + speed_y);
 			drop = true;
 			character.C_Animation(8);
+			m->Play(3);
 		}
 		else if ((y % 44 == 0 && (map[y / 44][(x + speed_x) / 40] != 0 && map[y / 44][x  / 40] != 5)) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x  / 40] != 0 && map[y / 44][x / 40] != 5))) {
+			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
+			character.C_Animation(1);
+		}
+		else if (y % 44 == 0 && (x / 40 + 1) >= 27) {
+			test += 1;
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
 			character.C_Animation(1);
 		}
@@ -786,9 +803,11 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		}
 	}
 
-	//CAudio *m = CAudio::Instance();
-	//m->Load(0 , "resources/bgm.mp3");
-	//m->Play(0);
+	m->Load(0 , "resources/born.mp3");
+	m->Load(1, "resources/dead.mp3");
+	m->Load(2, "resources/dig.mp3");
+	m->Load(3, "resources/fall.mp3");
+	m->Load(4, "resources/finish.mp3");
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -1060,6 +1079,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if (nChar == 0x51 && character.GetTop() / 44 < 15) {
 		if (map[character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1] == 0 && !digleft) {
+			m->Play(2);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].SetFrameIndexOfBitmap(1);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 - 1].DigLeft();
 			digleft = true;
@@ -1067,6 +1087,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if (nChar == 0x58 && character.GetTop() / 44 < 15) {
 		if ((character.GetTop() / 44) < 16 && map[character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1] == 0 && !digright) {
+			m->Play(2);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].SetFrameIndexOfBitmap(10);
 			stage[stageid - 1][character.GetTop() / 44 + 1][character.GetLeft() / 40 + 1].DigRight();
 			digright = true;
@@ -1156,9 +1177,9 @@ void CGameStateRun::OnShow()
 		CTextDraw::Print(pDC, 0, 0, "invincible");
 		CDDraw::ReleaseBackCDC();
 	}
-	CDC *pDC = CDDraw::GetBackCDC();
+	/*CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC();
+	CDDraw::ReleaseBackCDC();*/
 }
 
 
