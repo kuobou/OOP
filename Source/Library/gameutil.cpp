@@ -702,7 +702,7 @@ namespace game_framework {
 	}
 	void CMovingBitmap::EnemyMove(CMovingBitmap character, int map[18][28]) {
 		int left = 0;
-		int right = 0;
+		int right = 1;
 		int x = GetLeft();
 		int y = GetTop();
 		bool down = false;
@@ -852,7 +852,7 @@ namespace game_framework {
 							direction = 4;
 						}
 					}
-					else {
+					else if (GetPos() == 2 || GetPos() == 6) {
 						SetTopLeft(x - speed_x, y);
 						if (map[y / 44][(x - speed_x) / 40] == 3) {
 							Animation(6);
@@ -953,7 +953,7 @@ namespace game_framework {
 							direction = 4;
 						}
 					}
-					else {
+					else if(GetPos() == 2 || GetPos() == 6) {
 						SetTopLeft(x - speed_x, y);
 						if (map[y / 44][(x - speed_x) / 40] == 3) {
 							Animation(6);
@@ -1097,7 +1097,7 @@ namespace game_framework {
 							Animation(3);
 						}
 					}
-					else if (x > character.GetLeft() && map[y / 44][(x - speed_x) / 40] != 0 && map[y / 44][(x - speed_x) / 40] != 5 && !(map[y / 44][(x - speed_x) / 40] != 3 && map[y / 44 + 1][(x - speed_x) / 40] == 1)) {
+					else if (x > character.GetLeft() && map[y / 44][(x - speed_x) / 40] != 0 && map[y / 44][(x - speed_x) / 40] != 5) {
 						SetTopLeft(x - speed_x, y);
 						if (map[y / 44][(x - speed_x) / 40] == 3) {
 							Animation(6);
@@ -1108,7 +1108,7 @@ namespace game_framework {
 							direction = 3;
 						}
 					}
-					else if(x < character.GetLeft() && map[y / 44][(x + speed_x) / 40 + 1] != 0 && map[y / 44][(x + speed_x) / 40 + 1] != 5 && !(map[y / 44][(x + speed_x) / 40 + 1] != 3 && map[y / 44 + 1][(x + speed_x) / 40 + 1] == 1)){
+					else if(x < character.GetLeft() && map[y / 44][(x - speed_x) / 40] != 0 && map[y / 44][(x - speed_x) / 40] != 5){
 						SetTopLeft(x + speed_x, y);
 						if (map[y / 44][(x + speed_x) / 40] == 3) {
 							Animation(5);

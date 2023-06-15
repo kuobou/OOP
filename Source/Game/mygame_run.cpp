@@ -28,6 +28,7 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	test = character.GetLeft();
 	if (finished) {
 		Sleep(5000);
 		exit(0);
@@ -1155,9 +1156,9 @@ void CGameStateRun::OnShow()
 		CTextDraw::Print(pDC, 0, 0, "invincible");
 		CDDraw::ReleaseBackCDC();
 	}
-	/*CDC *pDC = CDDraw::GetBackCDC();
+	CDC *pDC = CDDraw::GetBackCDC();
 	CTextDraw::Print(pDC, 300, 600, to_string(test));
-	CDDraw::ReleaseBackCDC();*/
+	CDDraw::ReleaseBackCDC();
 }
 
 
