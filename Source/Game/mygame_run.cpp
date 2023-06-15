@@ -298,6 +298,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			for (int j = 0; j < 28; j++) {
 				if (set[i][j] == 'M') {
 					monster[CountEnemy].SetTopLeft(j * 40, i * 44);
+					monster[CountEnemy].Animation(0);
 					CountEnemy++;
 				}
 			}
@@ -399,7 +400,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 		drop = false;
 		int x = character.GetLeft();
 		int y = character.GetTop() + character.GetHeight() - 1;
-		if (map[y / 44][x / 40] == 2)
+		if (map[y / 44][x / 40] == 2 && map[(character.GetTop() - speed_y) / 44][x / 40] != 0 && map[(character.GetTop() - speed_y) / 44][x / 40] != 5)
 		{
 			if (x % 40 == 0) {
 				character.SetTopLeft(character.GetLeft(), character.GetTop() - speed_y);
@@ -448,7 +449,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop() - y % 44);
 			character.C_Animation(5);
 		}
-		else if (map[y / 44][character.GetLeft() / 40] == 2 && character.GetLeft() % 40 == 0) {
+		else if (map[y / 44][character.GetLeft() / 40] == 2 && character.GetLeft() % 40 == 0 && map[y / 44][(x + speed_x) / 40] != 0 && map[y / 44][(x + speed_x) / 40] != 5) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
 			character.C_Animation(3);
 		}
@@ -457,7 +458,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 			drop = true;
 			character.C_Animation(8);
 		}
-		else if ((y % 44 == 0 && (map[y / 44][x / 40] != 0 && map[y / 44][x / 40] != 5)) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5))) {
+		else if ((y % 44 == 0 && (map[y / 44][(x + speed_x) / 40] != 0 && map[y / 44][x  / 40] != 5)) || (y % 44 != 0 && (map[y / 44 + 1][x / 40] != 0 && map[y / 44 + 1][x / 40] != 5) && (map[y / 44][x  / 40] != 0 && map[y / 44][x / 40] != 5))) {
 			character.SetTopLeft(character.GetLeft() + speed_x, character.GetTop());
 			character.C_Animation(1);
 		}
@@ -751,6 +752,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		for (int j = 0; j < 28; j++) {
 			if (set[i][j] == 'M') {
 				monster[CountEnemy].SetTopLeft(j * 40, i * 44);
+				monster[CountEnemy].EnemyReset();
 				CountEnemy++;
 			}
 		}
@@ -1021,6 +1023,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			for (int j = 0; j < 28; j++) {
 				if (set[i][j] == 'M') {
 					monster[CountEnemy].SetTopLeft(j * 40, i * 44);
+					monster[CountEnemy].EnemyReset();
 					CountEnemy++;
 				}
 			}

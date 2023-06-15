@@ -137,6 +137,7 @@ namespace game_framework {
 		bool IsDig();
 		bool IsCatch();
 		void ResetCatch();
+		void CMovingBitmap::EnemyReset();
 	protected:
 		//! 當前幀的索引值。
 		int frameIndex = 0;
